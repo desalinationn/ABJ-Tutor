@@ -300,7 +300,7 @@
 
         .marquee-content {
             display: flex;
-            animation: marquee 33s linear infinite;
+            animation: marquee 25s linear infinite;
             white-space: nowrap;
         }
 
@@ -1002,6 +1002,13 @@
                 screenshotInput.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (file) {
+                        // Check file size (limit to 5MB)
+                        if (file.size > 5 * 1024 * 1024) {
+                            alert("File size too large. Please select an image smaller than 5MB.");
+                            this.value = "";
+                            return;
+                        }
+                        
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             paymentForm.screenshot = e.target.result;
@@ -1164,25 +1171,30 @@
             confirmBtn.disabled = true;
             confirmBtn.textContent = 'Submitting...';
 
-            // Send data to bot using Telegram Web App
-            tg.sendData(JSON.stringify(paymentData));
-            
-            // Close modal and show success message
-            document.getElementById('payment-modal').style.display = 'none';
-            resetPaymentForm();
-            
-            // Update UI to show pending status
-            updatePaymentButton('pending');
-            
-            // Show success message
-            const paymentStatus = document.getElementById('payment-status');
-            paymentStatus.innerHTML = `
-                <div class="success-message">
-                    <strong>✅ Payment Submitted Successfully!</strong><br>
-                    Your payment is under review. We will notify you when it's approved.
-                </div>
-            `;
-            paymentStatus.style.display = 'block';
+            try {
+                // Send data to bot using Telegram Web App
+                tg.sendData(JSON.stringify(paymentData));
+                
+                // Close modal and show success message
+                document.getElementById('payment-modal').style.display = 'none';
+                resetPaymentForm();
+                
+                // Update UI to show pending status
+                updatePaymentButton('pending');
+                
+                // Show success message
+                const paymentStatus = document.getElementById('payment-status');
+                paymentStatus.innerHTML = `
+                    <div class="success-message">
+                        <strong>✅ Payment Submitted Successfully!</strong><br>
+                        Your payment is under review. We will notify you when it's approved.
+                    </div>
+                `;
+                paymentStatus.style.display = 'block';
+            } catch (error) {
+                console.error('Error sending payment data:', error);
+                alert("There was an error submitting your payment. Please try again.");
+            }
             
             // Reset button after delay
             setTimeout(() => {
