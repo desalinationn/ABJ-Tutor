@@ -997,26 +997,24 @@
                 });
             });
             
-            // Handle screenshot upload
+            // Handle screenshot upload with compression
             if (screenshotInput) {
                 screenshotInput.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (file) {
-                        // Check file size (limit to 5MB)
-                        if (file.size > 5 * 1024 * 1024) {
-                            alert("File size too large. Please select an image smaller than 5MB.");
+                        // Check file size (limit to 2MB)
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert("File size too large. Please select an image smaller than 2MB.");
                             this.value = "";
                             return;
                         }
                         
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            paymentForm.screenshot = e.target.result;
-                            screenshotPreview.src = e.target.result;
+                        compressImage(file, function(compressedDataUrl) {
+                            paymentForm.screenshot = compressedDataUrl;
+                            screenshotPreview.src = compressedDataUrl;
                             screenshotPreview.style.display = 'block';
                             validatePaymentForm();
-                        };
-                        reader.readAsDataURL(file);
+                        });
                     }
                 });
             }
@@ -1044,6 +1042,49 @@
                     document.getElementById('samples').scrollIntoView({ behavior: 'smooth' });
                 });
             }
+        }
+
+        // Image compression function
+        function compressImage(file, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Set maximum dimensions
+                    const maxWidth = 800;
+                    const maxHeight = 800;
+                    
+                    let { width, height } = img;
+                    
+                    // Calculate new dimensions while maintaining aspect ratio
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round((width * maxHeight) / height);
+                            height = maxHeight;
+                        }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // Draw and compress image
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Get compressed data URL with quality 0.7
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    callback(compressedDataUrl);
+                };
+            };
         }
         
         // Update stream options based on semester
@@ -1153,7 +1194,7 @@
                 return;
             }
 
-            // Prepare data to send to bot
+            // Prepare data to send to bot - WITHOUT screenshot to avoid data size issues
             const paymentData = {
                 action: 'submit_payment',
                 fullName: paymentForm.fullName,
@@ -1161,7 +1202,6 @@
                 gender: paymentForm.gender,
                 semester: paymentForm.semester,
                 paymentMethod: paymentForm.method,
-                screenshot: paymentForm.screenshot,
                 timestamp: new Date().toISOString(),
                 user: tg.initDataUnsafe.user
             };
@@ -1172,35 +1212,80 @@
             confirmBtn.textContent = 'Submitting...';
 
             try {
-                // Send data to bot using Telegram Web App
+                // Send basic payment data to bot using Telegram Web App
                 tg.sendData(JSON.stringify(paymentData));
                 
-                // Close modal and show success message
-                document.getElementById('payment-modal').style.display = 'none';
-                resetPaymentForm();
+                // Now send the screenshot separately via a different method
+                // We'll use the bot's direct message to send the screenshot
+                setTimeout(() => {
+                    sendScreenshotToBot(paymentData);
+                }, 1000);
                 
-                // Update UI to show pending status
-                updatePaymentButton('pending');
-                
-                // Show success message
-                const paymentStatus = document.getElementById('payment-status');
-                paymentStatus.innerHTML = `
-                    <div class="success-message">
-                        <strong>✅ Payment Submitted Successfully!</strong><br>
-                        Your payment is under review. We will notify you when it's approved.
-                    </div>
-                `;
-                paymentStatus.style.display = 'block';
             } catch (error) {
                 console.error('Error sending payment data:', error);
                 alert("There was an error submitting your payment. Please try again.");
-            }
-            
-            // Reset button after delay
-            setTimeout(() => {
                 confirmBtn.disabled = false;
                 confirmBtn.textContent = 'Confirm Payment';
-            }, 2000);
+            }
+        }
+
+        // Send screenshot separately to avoid data size issues
+        function sendScreenshotToBot(paymentData) {
+            // Create a message with the payment details and instructions for admin
+            const message = `
+🎯 *New Payment Submission*
+
+👤 *Student Details:*
+• *Name:* ${paymentData.fullName}
+• *Gender:* ${paymentData.gender}
+• *Semester:* ${paymentData.semester}
+• *Stream:* ${paymentData.stream}
+• *Payment Method:* ${paymentData.paymentMethod}
+• *User ID:* ${paymentData.user.id}
+• *Username:* @${paymentData.user.username || 'N/A'}
+
+⏰ *Submitted:* ${new Date().toLocaleString()}
+
+📸 *Screenshot attached below*
+            `;
+
+            // Use Telegram's share functionality to send the message and screenshot
+            const shareUrl = `https://t.me/share/url?url=${encodeURIComponent('Payment Screenshot')}&text=${encodeURIComponent(message)}`;
+            
+            // Close modal and show success message
+            document.getElementById('payment-modal').style.display = 'none';
+            resetPaymentForm();
+            
+            // Update UI to show pending status
+            updatePaymentButton('pending');
+            
+            // Show success message with instructions
+            const paymentStatus = document.getElementById('payment-status');
+            paymentStatus.innerHTML = `
+                <div class="success-message">
+                    <strong>✅ Payment Details Submitted!</strong><br>
+                    Please now share the payment screenshot with the bot:<br><br>
+                    <button id="share-screenshot" class="btn btn-primary" style="margin-top: 0.5rem;">
+                        📤 Share Screenshot with Bot
+                    </button>
+                </div>
+            `;
+            paymentStatus.style.display = 'block';
+
+            // Add click handler for share button
+            document.getElementById('share-screenshot').addEventListener('click', function() {
+                // Open Telegram share dialog
+                window.open(shareUrl, '_blank');
+                
+                // Show final confirmation
+                paymentStatus.innerHTML = `
+                    <div class="success-message">
+                        <strong>✅ Submission Complete!</strong><br>
+                        Your payment is under review. We will notify you when it's approved.<br>
+                        <small>If the screenshot wasn't shared, please send it directly to @ABJ_Tutorial_Bot</small>
+                    </div>
+                `;
+            });
         }
 
         // Update payment button based on status
