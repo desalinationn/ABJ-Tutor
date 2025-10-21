@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="ABJ.jpg">
     <style>
         /* All your existing CSS remains the same */
         :root {
@@ -641,6 +643,7 @@
         <!-- Telegram verification overlay -->
         <div id="verification-overlay" class="loading-overlay" style="display: none;">
             <div class="loading-content">
+                <img src="ABJ.jpg" alt="ABJ" class="loading-logo">
                 <div class="loading-title">Opening ABJ Tutorial…</div>
                 <div class="loading-subtitle">Please wait while we connect your Telegram account</div>
                 <div class="loading-spinner"></div>
@@ -650,6 +653,7 @@
         <!-- Telegram notice (shown when not in Telegram) -->
         <div id="telegram-notice" class="telegram-notice" style="display: none;">
             <div class="notice-content">
+                <img src="ABJ.jpg" alt="ABJ" style="height: 4rem; width: 4rem; border-radius: 0.75rem; object-fit: cover; margin-bottom: 1rem;">
                 <div class="notice-title">ABJ Tutorial</div>
                 <div class="notice-text">This site works only via the Telegram Mini App. Please open our Telegram bot and tap <b>Open</b> to continue.</div>
                 <a id="telegram-bot-link" class="btn btn-primary" href="#" target="_blank" rel="noreferrer">Open Telegram Bot</a>
@@ -1231,7 +1235,9 @@
                 testimonialElement.innerHTML = `
                     <div class="testimonial-card">
                         <div class="testimonial-header">
-                            <div class="avatar">AB</div>
+                            <div class="avatar">
+                                <img src="ABJ.jpg" alt="ABJ">
+                            </div>
                             <div>
                                 <div class="testimonial-name">${testimonial.name}</div>
                                 <div class="testimonial-stars">★★★★★</div>
