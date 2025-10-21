@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABJ Tutorial</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* All your existing CSS remains the same */
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --primary: 221 83% 53%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 0 0% 96%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 0 0% 96%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 217 92% 60%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 0 0% 100%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 221 83% 53%;
+            --radius: 0.75rem;
+            --brand-50: 213 100% 97%;
+            --brand-100: 214 95% 93%;
+            --brand-200: 213 97% 87%;
+            --brand-300: 212 96% 78%;
+            --brand-400: 213 94% 68%;
+            --brand-500: 217 91% 60%;
+            --brand-600: 221 83% 53%;
+            --brand-700: 224 76% 48%;
+            --brand-800: 226 71% 40%;
+            --brand-900: 224 64% 33%;
+        }
+
+        .font-hero { 
+            font-family: 'Josefin Sans', 'Poppins', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; 
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: white;
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: hsl(var(--foreground));
+        }
+
+        .btn-secondary:hover {
+            background-color: hsl(var(--muted));
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .hero {
+            padding: 3rem 0 4rem;
+            background-color: white;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 9999px;
+            background-color: hsl(var(--brand-50));
+            color: hsl(var(--brand-700));
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+        }
+
+        .hero-description {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            max-width: 100%;
+        }
+
+        .hero-description p {
+            font-family: 'Josefin Sans', sans-serif;
+            color: hsl(var(--foreground) / 0.9);
+            font-size: 1.125rem;
+            line-height: 1.8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            border-radius: 0.75rem;
+            background-color: white;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: hsl(var(--brand-600));
+        }
+
+        .stat-text {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-top: 0.5rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .nav-cards {
+            padding: 3rem 0;
+            background-color: white;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .card {
+            border-radius: 1rem;
+            background-color: white;
+            padding: 2rem 1.5rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .card-icon {
+            color: hsl(var(--brand-600));
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .card-desc {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .samples {
+            padding: 3rem 0;
+            background-color: white;
+        }
+
+        .samples-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .samples-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .sample-card {
+            border-radius: 1rem;
+            background-color: white;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .sample-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            padding: 0 1.5rem;
+        }
+
+        .video-container {
+            aspect-ratio: 16/9;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .sample-desc {
+            padding: 1rem 1.5rem;
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .testimonials {
+            padding: 3rem 0;
+            background-color: white;
+        }
+
+        .marquee-container {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .marquee-content {
+            display: flex;
+            animation: marquee 33s linear infinite;
+            white-space: nowrap;
+        }
+
+        .marquee-content.paused {
+            animation-play-state: paused;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .testimonial-item {
+            flex-shrink: 0;
+            padding: 0 1rem;
+            width: 300px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+        }
+
+        .testimonial-card.active {
+            background-color: hsl(var(--brand-50));
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: hsl(var(--brand-600));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .testimonial-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .testimonial-stars {
+            color: #f59e0b;
+            font-size: 0.75rem;
+            line-height: 1;
+        }
+
+        .testimonial-quote {
+            font-size: 0.875rem;
+            line-height: 1.75;
+            color: #1e293b;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .footer {
+            margin-top: 0;
+            background-color: white;
+        }
+
+        .footer-content {
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                align-items: center;
+            }
+        }
+
+        .footer-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-description {
+            margin-top: 0.5rem;
+            color: hsl(var(--muted-foreground));
+            max-width: 100%;
+            font-size: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .social-link {
+            width: 3rem;
+            height: 3rem;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background-color: white;
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .footer-copyright {
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            text-align: center;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 0.75rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .modal-header {
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid hsl(var(--border));
+            font-size: 0.875rem;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid hsl(var(--border));
+            font-size: 0.875rem;
+            background-color: white;
+        }
+
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .payment-method-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid hsl(var(--border));
+            background: white;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .payment-method-btn.active {
+            background-color: hsl(var(--primary));
+            color: white;
+            border-color: hsl(var(--primary));
+        }
+
+        .payment-instructions {
+            background-color: hsl(var(--muted));
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .loading-logo {
+            height: 4rem;
+            width: 4rem;
+            border-radius: 0.75rem;
+            object-fit: cover;
+        }
+
+        .loading-title {
+            margin-top: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .loading-subtitle {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .loading-spinner {
+            margin-top: 1.5rem;
+            height: 2rem;
+            width: 2rem;
+            border-radius: 9999px;
+            border: 2px solid hsl(var(--brand-500));
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .telegram-notice {
+            min-height: 75vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+        }
+
+        .notice-content {
+            text-align: center;
+            max-width: 28rem;
+        }
+
+        .notice-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .notice-text {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 3rem;
+                align-items: center;
+            }
+        }
+
+        .success-message {
+            background-color: hsl(var(--brand-50));
+            border: 1px solid hsl(var(--brand-200));
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Telegram verification overlay -->
+        <div id="verification-overlay" class="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <div class="loading-title">Opening ABJ Tutorial…</div>
+                <div class="loading-subtitle">Please wait while we connect your Telegram account</div>
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+
+        <!-- Telegram notice (shown when not in Telegram) -->
+        <div id="telegram-notice" class="telegram-notice" style="display: none;">
+            <div class="notice-content">
+                <div class="notice-title">ABJ Tutorial</div>
+                <div class="notice-text">This site works only via the Telegram Mini App. Please open our Telegram bot and tap <b>Open</b> to continue.</div>
+                <a id="telegram-bot-link" class="btn btn-primary" href="#" target="_blank" rel="noreferrer">Open Telegram Bot</a>
+            </div>
+        </div>
+
+        <!-- Payment Dialog Modal -->
+        <div id="payment-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Finish your payment</h2>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-input" placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Semester</label>
+                    <select id="semester" class="form-select">
+                        <option value="">Select semester</option>
+                        <option value="First Semester">First Semester</option>
+                        <option value="Second Semester">Second Semester</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Stream</label>
+                    <select id="stream" class="form-select" disabled>
+                        <option value="">Select stream</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <select id="gender" class="form-select">
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Payment Method</label>
+                    <div class="payment-methods">
+                        <button type="button" class="payment-method-btn" data-method="Telebirr">Telebirr</button>
+                        <button type="button" class="payment-method-btn" data-method="CBE">CBE</button>
+                        <button type="button" class="payment-method-btn" data-method="mPesa">mPesa</button>
+                    </div>
+                </div>
+                <div id="payment-instructions" class="payment-instructions" style="display: none;">
+                    <!-- Payment instructions will be inserted here -->
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Upload Payment Screenshot</label>
+                    <input type="file" id="screenshot" accept="image/*">
+                    <img id="screenshot-preview" style="display: none; margin-top: 0.5rem; height: 7rem; object-fit: cover; border-radius: 0.375rem;">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-payment" class="btn btn-secondary">Cancel</button>
+                    <button type="button" id="confirm-payment" class="btn btn-primary" disabled>Confirm Payment</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content (shown when in Telegram) -->
+        <div id="main-content" style="display: none;">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-grid">
+                        <div class="hero-content">
+                            <div class="hero-tag">ABJ Tutorial • Trusted by Students</div>
+                            <h1 class="hero-title font-hero">Welcome to ABJ Tutorial</h1>
+                            <div class="hero-description">
+                                <p>Since 2023 (2016 E.C.), ABJ Tutorial has helped Ethiopian university freshmen learn simply and effectively offering past exams with step‑by‑step solutions, concise notes, and clear explanations so students can prepare smarter and achieve higher results.</p>
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-number">1,000+</div>
+                                        <div class="stat-text">Students taught in a short time</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number">95%</div>
+                                        <div class="stat-text">Scored above 3.0 GPA</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number">99%+</div>
+                                        <div class="stat-text">Of 4.0 scorers at Jimma were ABJ students</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number">1M+</div>
+                                        <div class="stat-text">YouTube views across our lessons</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hero-actions">
+                                <button id="payment-btn" class="btn btn-primary">Get Started</button>
+                                <button id="demo-btn" class="btn btn-secondary">Start Demo</button>
+                            </div>
+                            <div id="payment-status" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Cards -->
+            <section class="nav-cards">
+                <div class="container">
+                    <h2 class="section-title">What ABJ Tutorial Covers</h2>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-icon">▶️</div>
+                            <h3 class="card-title">Video Tutorials</h3>
+                            <p class="card-desc">Step-by-step videos.</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon">👥</div>
+                            <h3 class="card-title">Audio Lessons</h3>
+                            <p class="card-desc">Learn on the go.</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon">➡️</div>
+                            <h3 class="card-title">Text Notes</h3>
+                            <p class="card-desc">Summarized notes.</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon">🎁</div>
+                            <h3 class="card-title">Invite & Earn</h3>
+                            <p class="card-desc">Get rewards.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Samples Section -->
+            <section id="samples" class="samples">
+                <div class="container">
+                    <h2 class="section-title">Tutorial Samples</h2>
+                    <div class="samples-grid">
+                        <div class="sample-card">
+                            <h3 class="sample-title">Civics: Deontological Ethics</h3>
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/xFRevkVzPFk?si=h8-fjoB-WzlrG5mm" title="ABJ Sample Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <p class="sample-desc">CIVICS CHAPTER TWO — Deontological Normative Ethics: Deontological Ethics</p>
+                        </div>
+                        <div class="sample-card">
+                            <h3 class="sample-title">Biology for freshman students</h3>
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/8IcjSb1uzco?si=gyYW-_AOYjlOwRTK" title="ABJ Sample Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <p class="sample-desc">Biology for freshman students chapter 2</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section class="testimonials">
+                <div class="container">
+                    <h2 class="section-title">Testimonials</h2>
+                    <div class="marquee-container">
+                        <div id="marquee-content" class="marquee-content">
+                            <!-- Testimonials will be populated here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-grid">
+                            <div>
+                                <h3 class="footer-title">Contact ABJ</h3>
+                                <p class="footer-description">
+                                    We're here to help you learn smarter and achieve more. Reach out to us on social media or phone anytime.
+                                </p>
+                            </div>
+                            <div class="social-links">
+                                <a aria-label="Telegram" href="https://t.me/Mejido" target="_blank" rel="noreferrer" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#0088cc">
+                                        <path d="M9.999 15.2 9.9 19c.4 0 .6-.2.8-.4l2-1.9 4.1 3c.8.5 1.3.2 1.5-.7l2.7-12.6c.2-.9-.3-1.3-1.1-1L2.8 9.6c-.9.3-.9.8-.2 1l4.3 1.3 10.1-6.4c.5-.3.9-.1.6.2" />
+                                    </svg>
+                                </a>
+                                <a aria-label="Instagram" href="https://www.instagram.com/abdulmejidsehab?igsh=MW1wcDc1Ynp3eTI3Mw==" target="_blank" rel="noreferrer" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#E4405F">
+                                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 .001 7.001A3.5 3.5 0 0 0 12 8.5zm5.1-2.15a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/>
+                                    </svg>
+                                </a>
+                                <a aria-label="YouTube" href="https://youtube.com/@abjtube1?si=z1AtnWJoTwVp9jcT" target="_blank" rel="noreferrer" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#FF0000">
+                                        <path d="M23.5 6.2s-.2-1.7-.8-2.4c-.8-.8-1.6-.8-2-1C17.2 2.5 12 2.5 12 2.5h0s-5.2 0-8.7.3c-.5.1-1.3.1-2 .9C.7 4.5.5 6.2.5 6.2S0 8.2 0 10.2v1.7c0 2 .5 4  .5 4s.2 1.7.8 2.4c.8.8 1.9.8 2.4.9 1.8.2 7.7.3 8.3.3h.2c.6 0 6.5-.1 8.3-.3.5-.1 1.6-.1 2.4-.9.6-.7.8-2.4.8-2.4s.5-2 .5-4V10.2c0-2-.5-4-.5-4zM9.5 13.6V7.9l6.1 2.9-6.1 2.8z" />
+                                    </svg>
+                                </a>
+                                <a aria-label="TikTok" href="https://www.tiktok.com/@jimma_university?_t=ZM-8zMiG4tMPAe&_r=1" target="_blank" rel="noreferrer" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#000000">
+                                        <path d="M21 8.1a6.7 6.7 0 0 1-4-1.3v7.2a6 6 0 1 1-6-6 6.1 6.1 0 0 1 1 .1v3.1a3 3 0 1 0 2 2.8V2h3a6.7 6.7 0 0 0 4 4v2.1z" />
+                                    </svg>
+                                </a>
+                                <a aria-label="Phone" href="tel:+251927429565" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#25D366">
+                                        <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.2 9.4a16 16 0 0 0 6 6l1.9-1c.6-.3 1.4-.3 2 .2.8.3 1.7.5 2.6.6A2 2 0 0 1 22 16.9z" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="footer-copyright">© <span id="current-year"></span> ABJ Tutorial. All rights reserved.</div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Testimonials data
+        const testimonials = [
+            { name: "Forwarded from 🦋", quote: "Bemejemerya thank you so much I gained a lot of things from ABJ tutorial — the tutors, the questions and the exams were really great. It made me so confident. I'm very glad I joined!" },
+            { name: "Forwarded from Sura", quote: "Thank you very much ABJ" },
+            { name: "Forwarded from Haaroneu", quote: "Silagegnehuchiu betam des blognal 🙏🙏🙏🙏🙏" },
+            { name: "Forwarded from Sura", quote: "Am proud to be one of your students" },
+            { name: "Forwarded from Patience", quote: "First of all… betaaaam enamesegnallen. Betam yeserachut arif… previous exams, notes and explanations were amazing. English PDFs helped me a lot. Arif new bye asbalew" },
+            { name: "Forwarded from 아스텔", quote: "Your channel has been a game changer! You simplify complex subjects and make them understandable. Previous exams with answers helped me a lot. Keep up the great work! 😊" },
+            { name: "Forwarded from Feni", quote: "Endene hasab sisex yeneberew… bezu mesrat yexebekal… even leloch tutorial yemixekemutn like A+. Overall Arif tutorial new!" },
+            { name: "Forwarded from Sura", quote: "And am GREATFULL for all your works!" },
+            { name: "Forwarded from W@D 💎💎", quote: "ABJን ያስጀመርክ … በጣም የምትደነቁ ናችሁ … ማንም የፍረሽ ተማሪ ይህን ትቶር ቢከታተል ይለወጣል! 🙏😍" },
+            { name: "Forwarded from Benjamin", quote: "ABJ letbbrachu btam enamesgnalen btam redtachugnal Thanks 🙏😇" },
+            { name: "Forwarded from Milki Mk", quote: "I believe, if anyone joins ABJ tutorial he/she can realize childhood dreams… I'm 2nd year banking and finance. ABJ is the best 👌👍" },
+            { name: "Forwarded from Endalk ", quote: "እሺ። ABJ tutorial በጣም ጠቅሞኛል… የምፈልገው department እንድገባ አገዘኝ … ለሚመጡት ተማሪዎች ቱቶሩን እንደምትሰጡ አልጠራጠርም።" },
+            { name: "Forwarded from Benjamin", quote: "Aw ene aysfelgm bye brase ergtegna nberku 😅 … leFetena btam redtachugnal … ahunm bertu" },
+            { name: "Forwarded from Ferdews", quote: "Ene Alhamdulilah redtognal new … at least tyaqe awetat lemaweq yeredal … Allah kenante gar yehun" },
+        ];
+
+        // Payment form state
+        let paymentForm = {
+            fullName: "",
+            stream: "",
+            gender: "",
+            semester: "",
+            method: "",
+            screenshot: ""
+        };
+
+        // Telegram Web App instance
+        let tg = null;
+
+        // Main application logic
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            
+            // Render testimonials
+            renderTestimonials();
+            
+            // Initialize payment dialog
+            initPaymentDialog();
+            
+            // Initialize Telegram Web App
+            initTelegramWebApp();
+        });
+
+        // Initialize Telegram Web App
+        function initTelegramWebApp() {
+            try {
+                tg = window.Telegram.WebApp;
+                
+                if (tg.initDataUnsafe) {
+                    // User is in Telegram
+                    document.getElementById('verification-overlay').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                    
+                    // Expand the Web App to full height
+                    tg.expand();
+                    
+                    // Set up back button
+                    tg.BackButton.onClick(() => {
+                        tg.close();
+                    });
+                    
+                    // Check if user already has payment status
+                    checkUserPaymentStatus();
+                } else {
+                    // Not in Telegram, show notice
+                    document.getElementById('telegram-notice').style.display = 'flex';
+                    document.getElementById('main-content').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Telegram Web App not available:', error);
+                document.getElementById('telegram-notice').style.display = 'flex';
+                document.getElementById('main-content').style.display = 'none';
+            }
+        }
+
+        // Check user payment status
+        function checkUserPaymentStatus() {
+            const user = tg.initDataUnsafe.user;
+            if (!user) return;
+
+            // You can implement this to check if user already paid
+            // For now, we'll assume no payment
+            updatePaymentButton('none');
+        }
+
+        // Initialize payment dialog
+        function initPaymentDialog() {
+            const paymentModal = document.getElementById('payment-modal');
+            const paymentBtn = document.getElementById('payment-btn');
+            const cancelPaymentBtn = document.getElementById('cancel-payment');
+            const confirmPaymentBtn = document.getElementById('confirm-payment');
+            const paymentMethodBtns = document.querySelectorAll('.payment-method-btn');
+            const semesterSelect = document.getElementById('semester');
+            const streamSelect = document.getElementById('stream');
+            const screenshotInput = document.getElementById('screenshot');
+            const screenshotPreview = document.getElementById('screenshot-preview');
+            
+            // Open payment modal when Get Started button is clicked
+            if (paymentBtn) {
+                paymentBtn.addEventListener('click', function() {
+                    paymentModal.style.display = 'flex';
+                });
+            }
+            
+            // Close payment modal
+            if (cancelPaymentBtn) {
+                cancelPaymentBtn.addEventListener('click', function() {
+                    paymentModal.style.display = 'none';
+                    resetPaymentForm();
+                });
+            }
+            
+            // Handle semester selection
+            if (semesterSelect) {
+                semesterSelect.addEventListener('change', function() {
+                    const semester = this.value;
+                    updateStreamOptions(semester);
+                });
+            }
+            
+            // Handle payment method selection
+            paymentMethodBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const method = this.getAttribute('data-method');
+                    selectPaymentMethod(method);
+                });
+            });
+            
+            // Handle screenshot upload
+            if (screenshotInput) {
+                screenshotInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            paymentForm.screenshot = e.target.result;
+                            screenshotPreview.src = e.target.result;
+                            screenshotPreview.style.display = 'block';
+                            validatePaymentForm();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+            // Handle form input changes
+            document.getElementById('fullName').addEventListener('input', function() {
+                paymentForm.fullName = this.value;
+                validatePaymentForm();
+            });
+            
+            document.getElementById('gender').addEventListener('change', function() {
+                paymentForm.gender = this.value;
+                validatePaymentForm();
+            });
+            
+            // Handle confirm payment
+            if (confirmPaymentBtn) {
+                confirmPaymentBtn.addEventListener('click', submitPaymentToBot);
+            }
+
+            // Demo button scroll to samples
+            const demoBtn = document.getElementById('demo-btn');
+            if (demoBtn) {
+                demoBtn.addEventListener('click', function() {
+                    document.getElementById('samples').scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+        }
+        
+        // Update stream options based on semester
+        function updateStreamOptions(semester) {
+            const streamSelect = document.getElementById('stream');
+            paymentForm.semester = semester;
+            
+            // Clear existing options
+            streamSelect.innerHTML = '<option value="">Select stream</option>';
+            
+            if (semester === 'First Semester') {
+                streamSelect.innerHTML += `
+                    <option value="Social">Social Science</option>
+                    <option value="Natural">Natural Science</option>
+                `;
+            } else if (semester === 'Second Semester') {
+                streamSelect.innerHTML += `
+                    <option value="Pre-Engineering">Pre-Engineering</option>
+                    <option value="Other Natural Science">Other Natural Science</option>
+                    <option value="Social Science">Social Science</option>
+                    <option value="Health">Health</option>
+                `;
+            }
+            
+            // Enable stream selection
+            streamSelect.disabled = !semester;
+            
+            // Handle stream selection
+            streamSelect.addEventListener('change', function() {
+                paymentForm.stream = this.value;
+                validatePaymentForm();
+            });
+            
+            validatePaymentForm();
+        }
+        
+        // Select payment method
+        function selectPaymentMethod(method) {
+            paymentForm.method = method;
+            
+            // Update UI
+            document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.payment-method-btn[data-method="${method}"]`).classList.add('active');
+            
+            // Show payment instructions
+            const instructions = document.getElementById('payment-instructions');
+            instructions.style.display = 'block';
+            
+            if (method === "Telebirr") {
+                instructions.innerHTML = '<div>Please transfer <b>120 birr</b> to <b>0927429565</b> (ABDULMEJID SEHAB), then upload the receipt.</div>';
+            } else if (method === "CBE") {
+                instructions.innerHTML = '<div>Please transfer <b>120 birr</b> to <b>1000417007192</b> (ABDULMEJID SEHAB), then upload the receipt.</div>';
+            } else if (method === "mPesa") {
+                instructions.innerHTML = '<div>Please transfer <b>120 birr</b> via mPesa and upload the receipt.</div>';
+            }
+            
+            validatePaymentForm();
+        }
+        
+        // Validate payment form
+        function validatePaymentForm() {
+            const confirmPaymentBtn = document.getElementById('confirm-payment');
+            const isFormValid = paymentForm.fullName && paymentForm.stream && 
+                              paymentForm.gender && paymentForm.semester && 
+                              paymentForm.method && paymentForm.screenshot;
+            
+            confirmPaymentBtn.disabled = !isFormValid;
+        }
+        
+        // Reset payment form
+        function resetPaymentForm() {
+            paymentForm = {
+                fullName: "",
+                stream: "",
+                gender: "",
+                semester: "",
+                method: "",
+                screenshot: ""
+            };
+            
+            document.getElementById('fullName').value = '';
+            document.getElementById('semester').value = '';
+            document.getElementById('stream').innerHTML = '<option value="">Select stream</option>';
+            document.getElementById('stream').disabled = true;
+            document.getElementById('gender').value = '';
+            document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('payment-instructions').style.display = 'none';
+            document.getElementById('screenshot').value = '';
+            document.getElementById('screenshot-preview').style.display = 'none';
+            document.getElementById('confirm-payment').disabled = true;
+        }
+        
+        // Submit payment to Telegram bot
+        function submitPaymentToBot() {
+            if (!paymentForm.fullName || !paymentForm.stream || !paymentForm.gender || 
+                !paymentForm.semester || !paymentForm.method || !paymentForm.screenshot) {
+                alert("Please complete all fields and upload the payment screenshot.");
+                return;
+            }
+            
+            if (!tg) {
+                alert("Telegram Web App not available. Please try again in Telegram.");
+                return;
+            }
+
+            // Prepare data to send to bot
+            const paymentData = {
+                action: 'submit_payment',
+                fullName: paymentForm.fullName,
+                stream: paymentForm.stream,
+                gender: paymentForm.gender,
+                semester: paymentForm.semester,
+                paymentMethod: paymentForm.method,
+                screenshot: paymentForm.screenshot,
+                timestamp: new Date().toISOString(),
+                user: tg.initDataUnsafe.user
+            };
+
+            // Show loading state
+            const confirmBtn = document.getElementById('confirm-payment');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Submitting...';
+
+            // Send data to bot using Telegram Web App
+            tg.sendData(JSON.stringify(paymentData));
+            
+            // Close modal and show success message
+            document.getElementById('payment-modal').style.display = 'none';
+            resetPaymentForm();
+            
+            // Update UI to show pending status
+            updatePaymentButton('pending');
+            
+            // Show success message
+            const paymentStatus = document.getElementById('payment-status');
+            paymentStatus.innerHTML = `
+                <div class="success-message">
+                    <strong>✅ Payment Submitted Successfully!</strong><br>
+                    Your payment is under review. We will notify you when it's approved.
+                </div>
+            `;
+            paymentStatus.style.display = 'block';
+            
+            // Reset button after delay
+            setTimeout(() => {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Confirm Payment';
+            }, 2000);
+        }
+
+        // Update payment button based on status
+        function updatePaymentButton(status) {
+            const paymentBtn = document.getElementById('payment-btn');
+            if (!paymentBtn) return;
+            
+            switch (status) {
+                case "none":
+                    paymentBtn.textContent = "Get Started";
+                    paymentBtn.disabled = false;
+                    paymentBtn.className = "btn btn-primary";
+                    break;
+                case "pending":
+                    paymentBtn.textContent = "Pending Approval";
+                    paymentBtn.disabled = true;
+                    paymentBtn.className = "btn btn-secondary";
+                    break;
+                case "approved":
+                    paymentBtn.textContent = "Access Content";
+                    paymentBtn.disabled = false;
+                    paymentBtn.className = "btn btn-primary";
+                    paymentBtn.onclick = function() {
+                        // Redirect to content or channel
+                        if (tg) {
+                            tg.openTelegramLink('https://t.me/your_private_channel');
+                        }
+                    };
+                    break;
+            }
+        }
+
+        // Render testimonials function
+        function renderTestimonials() {
+            const marqueeContent = document.getElementById('marquee-content');
+            
+            // Clear existing content
+            marqueeContent.innerHTML = '';
+            
+            // Create all 14 testimonials
+            testimonials.forEach(testimonial => {
+                const testimonialElement = document.createElement('div');
+                testimonialElement.className = 'testimonial-item';
+                testimonialElement.innerHTML = `
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="avatar">AB</div>
+                            <div>
+                                <div class="testimonial-name">${testimonial.name}</div>
+                                <div class="testimonial-stars">★★★★★</div>
+                            </div>
+                        </div>
+                        <p class="testimonial-quote">"${testimonial.quote}"</p>
+                    </div>
+                `;
+                marqueeContent.appendChild(testimonialElement);
+            });
+
+            // Duplicate testimonials for seamless scrolling
+            const testimonialsClone = marqueeContent.cloneNode(true);
+            marqueeContent.appendChild(testimonialsClone);
+
+            // Add click event to toggle animation and add blue background
+            const testimonialCards = document.querySelectorAll('.testimonial-card');
+            testimonialCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Toggle marquee animation
+                    marqueeContent.classList.toggle('paused');
+                    
+                    // Remove active class from all cards
+                    testimonialCards.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked card
+                    this.classList.add('active');
+                });
+            });
+        }
+    </script>
+</body>
+</html>
