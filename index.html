@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABJ Tutorial</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="ABJ.jpg">
+    <link rel="icon" type="image/jpeg" href="/photo_2024-05-08_10-48-29.jpg">
     <style>
-        /* All your existing CSS remains exactly the same */
+        /* CSS Variables for colors */
         :root {
             --background: 0 0% 100%;
             --foreground: 222.2 84% 4.9%;
@@ -43,8 +42,9 @@
             --brand-900: 224 64% 33%;
         }
 
-        .font-hero {
-            font-family: 'Josefin Sans', 'Poppins', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        /* Utility classes */
+        .font-hero { 
+            font-family: 'Josefin Sans', 'Poppins', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; 
         }
 
         * {
@@ -67,6 +67,7 @@
             padding: 0 2rem;
         }
 
+        /* Button styles */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -88,11 +89,13 @@
 
         .btn-primary:hover {
             opacity: 0.9;
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
             background-color: transparent;
             color: hsl(var(--foreground));
+            border: 1px solid hsl(var(--border));
         }
 
         .btn-secondary:hover {
@@ -104,6 +107,7 @@
             cursor: not-allowed;
         }
 
+        /* Hero section */
         .hero {
             padding: 3rem 0 4rem;
             background-color: white;
@@ -141,6 +145,12 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             max-width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .hero-description {
+                padding: 1.75rem;
+            }
         }
 
         .hero-description p {
@@ -190,6 +200,7 @@
             margin-top: 2rem;
         }
 
+        /* Navigation cards */
         .nav-cards {
             padding: 3rem 0;
             background-color: white;
@@ -220,6 +231,11 @@
             padding: 2rem 1.5rem;
             position: relative;
             text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
         }
 
         .card-icon {
@@ -239,6 +255,7 @@
             color: hsl(var(--muted-foreground));
         }
 
+        /* Samples section */
         .samples {
             padding: 3rem 0;
             background-color: white;
@@ -287,6 +304,7 @@
             color: hsl(var(--muted-foreground));
         }
 
+        /* Testimonials section */
         .testimonials {
             padding: 3rem 0;
             background-color: white;
@@ -295,12 +313,11 @@
         .marquee-container {
             overflow: hidden;
             position: relative;
-            width: 100%;
         }
 
         .marquee-content {
             display: flex;
-            animation: marquee 25s linear infinite;
+            animation: marquee 30s linear infinite;
             white-space: nowrap;
         }
 
@@ -320,7 +337,7 @@
         .testimonial-item {
             flex-shrink: 0;
             padding: 0 1rem;
-            width: 300px;
+            width: 320px;
         }
 
         .testimonial-card {
@@ -328,10 +345,11 @@
             border-radius: 1rem;
             padding: 1.5rem;
             cursor: pointer;
+            transition: transform 0.3s ease;
         }
 
-        .testimonial-card.active {
-            background-color: hsl(var(--brand-50));
+        .testimonial-card:hover {
+            transform: translateY(-3px);
         }
 
         .testimonial-header {
@@ -381,6 +399,7 @@
             word-break: break-word;
         }
 
+        /* Footer */
         .footer {
             margin-top: 0;
             background-color: white;
@@ -428,6 +447,11 @@
             border-radius: 50%;
             background-color: white;
             text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
         }
 
         .social-icon {
@@ -442,104 +466,7 @@
             text-align: center;
         }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 0.75rem;
-            width: 100%;
-            max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 1.5rem;
-        }
-
-        .modal-header {
-            margin-bottom: 1rem;
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            border: 1px solid hsl(var(--border));
-            font-size: 0.875rem;
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            border: 1px solid hsl(var(--border));
-            font-size: 0.875rem;
-            background-color: white;
-        }
-
-        .payment-methods {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .payment-method-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            border: 1px solid hsl(var(--border));
-            background: white;
-            cursor: pointer;
-            font-size: 0.875rem;
-        }
-
-        .payment-method-btn.active {
-            background-color: hsl(var(--primary));
-            color: white;
-            border-color: hsl(var(--primary));
-        }
-
-        .payment-instructions {
-            background-color: hsl(var(--muted));
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
+        /* Loading and verification */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -594,6 +521,7 @@
             }
         }
 
+        /* Telegram notice */
         .telegram-notice {
             min-height: 75vh;
             display: flex;
@@ -619,6 +547,7 @@
             margin-bottom: 1rem;
         }
 
+        /* Grid layout for hero */
         @media (min-width: 1024px) {
             .hero-grid {
                 display: grid;
@@ -627,190 +556,6 @@
                 align-items: center;
             }
         }
-
-        .success-message {
-            background-color: hsl(var(--brand-50));
-            border: 1px solid hsl(var(--brand-200));
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-top: 1rem;
-            text-align: center;
-        }
-
-        /* New styles for review section */
-        .review-section {
-            background-color: hsl(var(--brand-50));
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border-left: 4px solid hsl(var(--brand-500));
-        }
-
-        .review-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: hsl(var(--brand-700));
-        }
-
-        .review-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid hsl(var(--brand-100));
-        }
-
-        .review-label {
-            font-weight: 500;
-            color: hsl(var(--muted-foreground));
-        }
-
-        .review-value {
-            font-weight: 600;
-            color: hsl(var(--foreground));
-            text-align: right;
-        }
-
-        .upload-instructions {
-            background-color: hsl(var(--brand-50));
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            text-align: center;
-            border: 2px dashed hsl(var(--brand-300));
-        }
-
-        .upload-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .bot-username {
-            background-color: hsl(var(--brand-100));
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            color: hsl(var(--brand-700));
-            display: inline-block;
-            margin: 0.5rem 0;
-        }
-
-        /* Styles for the screenshot preview */
-        #screenshot-preview-container {
-            margin-top: 1rem;
-            text-align: center;
-        }
-        #screenshot-preview {
-            max-width: 100%;
-            height: auto;
-            border-radius: 0.5rem;
-            border: 1px solid hsl(var(--border));
-            display: none;
-        }
-
-        /* Share instructions styling */
-        .share-instructions {
-            background: linear-gradient(135deg, hsl(var(--brand-50)), hsl(var(--brand-100)));
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            border-left: 4px solid hsl(var(--brand-500));
-        }
-
-        .share-step {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            background: white;
-            border-radius: 0.5rem;
-            border: 1px solid hsl(var(--brand-200));
-        }
-
-        .step-number {
-            background: hsl(var(--brand-500));
-            color: white;
-            width: 1.5rem;
-            height: 1.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-right: 0.75rem;
-            flex-shrink: 0;
-        }
-
-        .step-content {
-            flex: 1;
-        }
-
-        .step-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            color: hsl(var(--brand-700));
-        }
-
-        .step-description {
-            font-size: 0.875rem;
-            color: hsl(var(--muted-foreground));
-        }
-
-        /* Bot integration styles */
-        .bot-integration {
-            background: linear-gradient(135deg, hsl(var(--brand-50)), hsl(var(--brand-100)));
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            text-align: center;
-            border: 2px solid hsl(var(--brand-300));
-        }
-
-        .bot-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .bot-button {
-            background: hsl(var(--brand-500));
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 0.5rem;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .bot-button:hover {
-            background: hsl(var(--brand-600));
-        }
-
-        .upload-box {
-            border: 2px dashed hsl(var(--brand-300));
-            border-radius: 0.5rem;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: hsl(var(--brand-50));
-        }
-
-        .upload-box:hover {
-            border-color: hsl(var(--brand-500));
-            background: hsl(var(--brand-100));
-        }
-
-        .upload-box.dragover {
-            border-color: hsl(var(--brand-500));
-            background: hsl(var(--brand-100));
-            transform: scale(1.02);
-        }
     </style>
 </head>
 <body>
@@ -818,7 +563,7 @@
         <!-- Telegram verification overlay -->
         <div id="verification-overlay" class="loading-overlay" style="display: none;">
             <div class="loading-content">
-                <img src="ABJ.jpg" alt="ABJ" class="loading-logo">
+                <img src="/photo_2024-05-08_10-48-29.jpg" alt="ABJ" class="loading-logo">
                 <div class="loading-title">Opening ABJ Tutorial…</div>
                 <div class="loading-subtitle">Please wait while we connect your Telegram account</div>
                 <div class="loading-spinner"></div>
@@ -828,13 +573,12 @@
         <!-- Telegram notice (shown when not in Telegram) -->
         <div id="telegram-notice" class="telegram-notice" style="display: none;">
             <div class="notice-content">
-                <img src="ABJ.jpg" alt="ABJ" style="height: 4rem; width: 4rem; border-radius: 0.75rem; object-fit: cover; margin-bottom: 1rem;">
                 <div class="notice-title">ABJ Tutorial</div>
                 <div class="notice-text">This site works only via the Telegram Mini App. Please open our Telegram bot and tap <b>Open</b> to continue.</div>
-                <a id="telegram-bot-link" class="btn btn-primary" href="https://t.me/abjjubot" target="_blank" rel="noreferrer">Open Telegram Bot</a>
+                <a id="telegram-bot-link" class="btn btn-primary" href="#" target="_blank" rel="noreferrer">Open Telegram Bot</a>
             </div>
         </div>
-        
+
         <!-- Main content (shown when in Telegram) -->
         <div id="main-content" style="display: none;">
             <!-- Hero Section -->
@@ -866,39 +610,39 @@
                                 </div>
                             </div>
                             <div class="hero-actions">
-                                <button id="get-started-btn" class="btn btn-primary">Get Started</button>
+                                <button id="payment-btn" class="btn btn-primary">Get Started</button>
                                 <button id="demo-btn" class="btn btn-secondary">Start Demo</button>
                             </div>
-                            <div id="payment-status" style="display: none;"></div>
+                            <div id="invite-status" style="display: none;"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Navigation Cards Section -->
+            <!-- Navigation Cards -->
             <section class="nav-cards">
                 <div class="container">
-                    <h2 class="section-title">What We Offer</h2>
+                    <h2 class="section-title">What ABJ Tutorial Covers</h2>
                     <div class="cards-grid">
                         <div class="card">
-                            <div class="card-icon">📚</div>
-                            <h3 class="card-title">Detailed Notes</h3>
-                            <p class="card-desc">Comprehensive and easy-to-understand notes for all subjects.</p>
+                            <div class="card-icon">▶️</div>
+                            <h3 class="card-title">Video Tutorials</h3>
+                            <p class="card-desc">Step-by-step videos.</p>
                         </div>
                         <div class="card">
-                            <div class="card-icon">📝</div>
-                            <h3 class="card-title">Past Exams</h3>
-                            <p class="card-desc">Access to previous university exams with solutions.</p>
+                            <div class="card-icon">👥</div>
+                            <h3 class="card-title">Audio Lessons</h3>
+                            <p class="card-desc">Learn on the go.</p>
                         </div>
                         <div class="card">
-                            <div class="card-icon">💡</div>
-                            <h3 class="card-title">Step-by-Step Solutions</h3>
-                            <p class="card-desc">Clear and detailed explanations for every problem.</p>
+                            <div class="card-icon">➡️</div>
+                            <h3 class="card-title">Text Notes</h3>
+                            <p class="card-desc">Summarized notes.</p>
                         </div>
                         <div class="card">
-                            <div class="card-icon">🗣️</div>
-                            <h3 class="card-title">Live Q&A Sessions</h3>
-                            <p class="card-desc">Interactive sessions to clarify doubts and enhance understanding.</p>
+                            <div class="card-icon">🎁</div>
+                            <h3 class="card-title">Invite & Earn</h3>
+                            <p class="card-desc">Get rewards.</p>
                         </div>
                     </div>
                 </div>
@@ -907,21 +651,21 @@
             <!-- Samples Section -->
             <section id="samples" class="samples">
                 <div class="container">
-                    <h2 class="section-title">Our Learning Samples</h2>
+                    <h2 class="section-title">Tutorial Samples</h2>
                     <div class="samples-grid">
                         <div class="sample-card">
-                            <h3 class="sample-title">Physics Tutorial</h3>
+                            <h3 class="sample-title">Civics: Deontological Ethics</h3>
                             <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=i_h-iK61gE5l1wR7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/xFRevkVzPFk?si=h8-fjoB-WzlrG5mm" title="ABJ Sample Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
-                            <p class="sample-desc">A sample physics lesson explaining fundamental concepts with real-world examples.</p>
+                            <p class="sample-desc">CIVICS CHAPTER TWO — Deontological Normative Ethics: Deontological Ethics</p>
                         </div>
                         <div class="sample-card">
-                            <h3 class="sample-title">Mathematics Problem Solving</h3>
+                            <h3 class="sample-title">Biology for freshman students</h3>
                             <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=i_h-iK61gE5l1wR7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/8IcjSb1uzco?si=gyYW-_AOYjlOwRTK" title="ABJ Sample Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
-                            <p class="sample-desc">Walkthrough of a challenging math problem, breaking it down into simple steps.</p>
+                            <p class="sample-desc">Biology for freshman students chapter 2</p>
                         </div>
                     </div>
                 </div>
@@ -930,37 +674,55 @@
             <!-- Testimonials Section -->
             <section class="testimonials">
                 <div class="container">
-                    <h2 class="section-title">What Our Students Say</h2>
+                    <h2 class="section-title">Testimonials</h2>
                     <div class="marquee-container">
                         <div id="marquee-content" class="marquee-content">
-                            <!-- Testimonial items will be rendered here by JS -->
+                            <!-- Testimonials will be populated here by JavaScript -->
                         </div>
                     </div>
                 </div>
             </section>
-
-            <!-- Footer Section -->
+            
+            <!-- Footer -->
             <footer class="footer">
-                <div class="container footer-content">
-                    <div class="footer-grid">
-                        <div>
-                            <h3 class="footer-title">ABJ Tutorial</h3>
-                            <p class="footer-description">Your partner in academic excellence for Ethiopian university freshmen.</p>
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-grid">
+                            <div>
+                                <h3 class="footer-title">Contact ABJ</h3>
+                                <p class="footer-description">
+                                    We're here to help you learn smarter and achieve more. Reach out to us on social media or phone anytime.
+                                </p>
+                            </div>
+                            <div class="social-links">
+                                <a aria-label="Telegram" href="https://t.me/Mejido" target="_blank" rel="noreferrer" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#0088cc">
+                                        <path d="M9.999 15.2 9.9 19c.4 0 .6-.2.8-.4l2-1.9 4.1 3c.8.5 1.3.2 1.5-.7l2.7-12.6c.2-.9-.3-1.3-1.1-1L2.8 9.6c-.9.3-.9.8-.2 1l4.3 1.3 10.1-6.4c.5-.3.9-.1.6.2" />
+                                    </svg>
+                                </a>
+                                <a aria-label="Instagram" href="https://www.instagram.com/abdulmejidsehab?igsh=MW1wcDc1Ynp3eTI3Mw==" target="_blank" rel="noreferrer" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#E4405F">
+                                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 .001 7.001A3.5 3.5 0 0 0 12 8.5zm5.1-2.15a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/>
+                                    </svg>
+                                </a>
+                                <a aria-label="YouTube" href="https://youtube.com/@abjtube1?si=z1AtnWJoTwVp9jcT" target="_blank" rel="noreferrer" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#FF0000">
+                                        <path d="M23.5 6.2s-.2-1.7-.8-2.4c-.8-.8-1.6-.8-2-1C17.2 2.5 12 2.5 12 2.5h0s-5.2 0-8.7.3c-.5.1-1.3.1-2 .9C.7 4.5.5 6.2.5 6.2S0 8.2 0 10.2v1.7c0 2 .5 4  .5 4s.2 1.7.8 2.4c.8.8 1.9.8 2.4.9 1.8.2 7.7.3 8.3.3h.2c.6 0 6.5-.1 8.3-.3.5-.1 1.6-.1 2.4-.9.6-.7.8-2.4.8-2.4s.5-2 .5-4V10.2c0-2-.5-4-.5-4zM9.5 13.6V7.9l6.1 2.9-6.1 2.8z" />
+                                    </svg>
+                                </a>
+                                <a aria-label="TikTok" href="https://www.tiktok.com/@jimma_university?_t=ZM-8zMiG4tMPAe&_r=1" target="_blank" rel="noreferrer" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#000000">
+                                        <path d="M21 8.1a6.7 6.7 0 0 1-4-1.3v7.2a6 6 0 1 1-6-6 6.1 6.1 0 0 1 1 .1v3.1a3 3 0 1 0 2 2.8V2h3a6.7 6.7 0 0 0 4 4v2.1z" />
+                                    </svg>
+                                </a>
+                                <a aria-label="Phone" href="tel:+251927429565" class="social-link">
+                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#25D366">
+                                        <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.2 9.4a16 16 0 0 0 6 6l1.9-1c.6-.3 1.4-.3 2 .2.8.3 1.7.5 2.6.6A2 2 0 0 1 22 16.9z" />
+                                    </svg>
+                                </a>
+                            </div>
                         </div>
-                        <div class="social-links">
-                            <a href="https://t.me/abjjubot" target="_blank" class="social-link" aria-label="Telegram">
-                                <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.276 7.425a.75.75 0 01.077.712l-1.353 4.276a.75.75 0 01-1.094.464l-2.709-1.921-.715.715.938 2.536a.75.75 0 01-.264.846L8 16.208V9.176l5.776-3.85a.75.75 0 01.996.111l2.091 2.923z" clip-rule="evenodd"></path></svg>
-                            </a>
-                            <a href="#" target="_blank" class="social-link" aria-label="YouTube">
-                                <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.613 2.133a2.536 2.536 0 00-1.785-1.785C16.34 0 12 0 12 0S7.66 0 6.172.348a2.536 2.536 0 00-1.785 1.785C4 3.66 4 8 4 8v8c0 4.34 0 7.66.387 7.867a2.536 2.536 0 001.785 1.785c1.488.348 5.828.348 5.828.348S16.34 24 17.828 23.652a2.536 2.536 0 001.785-1.785C20 20.34 20 16 20 16V8c0-4.34 0-7.66-.387-7.867zM9 16.5v-9l6 4.5-6 4.5z"></path></svg>
-                            </a>
-                            <a href="#" target="_blank" class="social-link" aria-label="Instagram">
-                                <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.336 2.502a1.5 1.5 0 00-1.5-1.5h-5.672a1.5 1.5 0 00-1.5 1.5v5.672a1.5 1.5 0 001.5 1.5h5.672a1.5 1.5 0 001.5-1.5V4.502zM12 15a3 3 0 100-6 3 3 0 000 6zM18.887 5.922a.5.5 0 100-1 .5.5 0 000 1z" clip-rule="evenodd"></path></svg>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="footer-copyright">
-                        &copy; <span id="current-year"></span> ABJ Tutorial. All rights reserved.
+                        <div class="footer-copyright">© <span id="current-year"></span> ABJ Tutorial. All rights reserved.</div>
                     </div>
                 </div>
             </footer>
@@ -986,159 +748,280 @@
             { name: "Forwarded from Ferdews", quote: "Ene Alhamdulilah redtognal new … at least tyaqe awetat lemaweq yeredal … Allah kenante gar yehun" },
         ];
 
-        // Payment status tracking
-        let userPaymentStatus = 'none';
-
-        // Telegram Web App instance
-        let tg = null;
-
-        // Elements
-        const getStartedBtn = document.getElementById('get-started-btn');
-        const demoBtn = document.getElementById('demo-btn');
-
         // Main application logic
         document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
+            
+            // Render testimonials
             renderTestimonials();
-            initTelegramWebApp();
-        });
+            
+            // State variables
+            let isTelegram = false;
+            let botUser = 'abjjubot'; // Your bot username
+            let userId = localStorage.getItem('abj_payment_id') || '';
+            let payStatus = 'none';
 
-        // Initialize Telegram Web App
-        function initTelegramWebApp() {
-            try {
-                tg = window.Telegram.WebApp;
+            // DOM elements
+            const telegramNotice = document.getElementById('telegram-notice');
+            const mainContent = document.getElementById('main-content');
+            const verificationOverlay = document.getElementById('verification-overlay');
+            const telegramBotLink = document.getElementById('telegram-bot-link');
+            const paymentBtn = document.getElementById('payment-btn');
+            const demoBtn = document.getElementById('demo-btn');
+            const inviteStatus = document.getElementById('invite-status');
 
-                if (tg.initDataUnsafe) {
-                    document.getElementById('verification-overlay').style.display = 'none';
-                    document.getElementById('main-content').style.display = 'block';
-                    tg.expand();
-
-                    tg.BackButton.onClick(() => {
-                        tg.close();
-                    });
-                    tg.BackButton.hide(); // Hide Back button by default
-
-                    checkUserPaymentStatus();
-                } else {
-                    document.getElementById('telegram-notice').style.display = 'flex';
-                    document.getElementById('main-content').style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Telegram Web App not available:', error);
-                document.getElementById('telegram-notice').style.display = 'flex';
-                document.getElementById('main-content').style.display = 'none';
-            }
-        }
-
-        // Check user payment status
-        function checkUserPaymentStatus() {
-            const user = tg.initDataUnsafe.user;
-            if (!user) return;
-
-            const userId = user.id;
-            const storedStatus = localStorage.getItem(`abj_payment_status_${userId}`);
-
-            if (storedStatus) {
-                userPaymentStatus = storedStatus;
-                updateGetStartedButton(storedStatus);
-
-                if (storedStatus === 'pending') {
-                    showPaymentStatusMessage('Your payment is under review. We will notify you when it\'s approved.', 'info');
-                } else if (storedStatus === 'approved') {
-                    showPaymentStatusMessage('Your payment has been approved! You can now access all content.', 'success');
-                }
-            } else {
-                updateGetStartedButton('none');
-            }
-        }
-
-        // Show payment status message on main page
-        function showPaymentStatusMessage(message, type = 'info') {
-            const paymentStatusDiv = document.getElementById('payment-status');
-            paymentStatusDiv.innerHTML = `<div class="success-message ${type === 'success' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">${message}</div>`;
-            paymentStatusDiv.style.display = 'block';
-        }
-
-        // Update Get Started button based on status
-        function updateGetStartedButton(status) {
-            if (!getStartedBtn) return;
-
-            const botUsername = "abjjubot"; // Correct bot username
-
-            switch (status) {
-                case "none":
-                    getStartedBtn.textContent = "Get Started";
-                    getStartedBtn.disabled = false;
-                    getStartedBtn.className = "btn btn-primary";
-                    getStartedBtn.onclick = function() {
-                        if (tg) {
-                            tg.openTelegramLink(`https://t.me/${botUsername}?start=register`);
-                        }
-                    };
-                    break;
-                case "pending":
-                    getStartedBtn.textContent = "Payment Under Review";
-                    getStartedBtn.disabled = true;
-                    getStartedBtn.className = "btn btn-secondary";
-                    break;
-                case "approved":
-                    getStartedBtn.textContent = "Access Content";
-                    getStartedBtn.disabled = false;
-                    getStartedBtn.className = "btn btn-primary";
-                    getStartedBtn.onclick = function() {
-                        if (tg) {
-                            tg.openTelegramLink('https://t.me/+CQqzsymP_Ms2OTk0'); // Your main channel link
-                        }
-                    };
-                    break;
-            }
-        }
-
-        // Demo button scroll to samples
-        if (demoBtn) {
-            demoBtn.addEventListener('click', function() {
-                document.getElementById('samples').scrollIntoView({ behavior: 'smooth' });
-            });
-        }
-
-        // Render testimonials function
-        function renderTestimonials() {
-            const marqueeContent = document.getElementById('marquee-content');
-            marqueeContent.innerHTML = '';
-
-            testimonials.forEach(testimonial => {
-                const testimonialElement = document.createElement('div');
-                testimonialElement.className = 'testimonial-item';
-                testimonialElement.innerHTML = `
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <div class="avatar">
-                                <img src="ABJ.jpg" alt="ABJ">
+            // Render testimonials function
+            function renderTestimonials() {
+                const marqueeContent = document.getElementById('marquee-content');
+                const logoSrc = "/photo_2024-05-08_10-48-29.jpg";
+                
+                // Create testimonials
+                testimonials.forEach(testimonial => {
+                    const testimonialElement = document.createElement('div');
+                    testimonialElement.className = 'testimonial-item';
+                    testimonialElement.innerHTML = `
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="avatar">
+                                    <img src="${logoSrc}" alt="ABJ" onerror="this.parentElement.innerHTML='AB'">
+                                </div>
+                                <div>
+                                    <div class="testimonial-name">${testimonial.name}</div>
+                                    <div class="testimonial-stars">★★★★★</div>
+                                </div>
                             </div>
-                            <div>
-                                <div class="testimonial-name">${testimonial.name}</div>
-                                <div class="testimonial-stars">★★★★★</div>
-                            </div>
+                            <p class="testimonial-quote">"${testimonial.quote}"</p>
                         </div>
-                        <p class="testimonial-quote">"${testimonial.quote}"</p>
-                    </div>
-                `;
-                marqueeContent.appendChild(testimonialElement);
-            });
-
-            // Clone for continuous marquee effect
-            const testimonialsClone = marqueeContent.cloneNode(true);
-            marqueeContent.appendChild(testimonialsClone);
-
-            const testimonialCards = document.querySelectorAll('.testimonial-card');
-            testimonialCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    marqueeContent.classList.toggle('paused');
-                    testimonialCards.forEach(c => c.classList.remove('active'));
-                    this.classList.add('active');
+                    `;
+                    marqueeContent.appendChild(testimonialElement);
                 });
-            });
-        }
+                
+                // Duplicate testimonials for seamless looping
+                testimonials.forEach(testimonial => {
+                    const testimonialElement = document.createElement('div');
+                    testimonialElement.className = 'testimonial-item';
+                    testimonialElement.innerHTML = `
+                        <div class="testimonial-card">
+                            <div class="testimonial-header">
+                                <div class="avatar">
+                                    <img src="${logoSrc}" alt="ABJ" onerror="this.parentElement.innerHTML='AB'">
+                                </div>
+                                <div>
+                                    <div class="testimonial-name">${testimonial.name}</div>
+                                    <div class="testimonial-stars">★★★★★</div>
+                                </div>
+                            </div>
+                            <p class="testimonial-quote">"${testimonial.quote}"</p>
+                        </div>
+                    `;
+                    marqueeContent.appendChild(testimonialElement);
+                });
+
+                // Add click event to toggle animation
+                const testimonialCards = document.querySelectorAll('.testimonial-card');
+                testimonialCards.forEach(card => {
+                    card.addEventListener('click', function() {
+                        marqueeContent.classList.toggle('paused');
+                    });
+                });
+            }
+
+            // Check if we're in Telegram
+            function checkTelegramEnvironment() {
+                try {
+                    isTelegram = !!(window.Telegram && window.Telegram.WebApp);
+                } catch (error) {
+                    isTelegram = false;
+                }
+
+                if (!isTelegram) {
+                    telegramNotice.style.display = 'flex';
+                    mainContent.style.display = 'none';
+                    telegramBotLink.href = `https://t.me/${botUser}`;
+                } else {
+                    telegramNotice.style.display = 'none';
+                    verificationOverlay.style.display = 'flex';
+                    
+                    // Initialize Telegram WebApp
+                    const tg = window.Telegram.WebApp;
+                    tg.expand();
+                    
+                    // Continue with user verification
+                    verifyUser();
+                }
+            }
+
+            // Verify user and check admin status
+            function verifyUser() {
+                const tg = window.Telegram.WebApp;
+                let telegramUserId = null;
+                let initData = tg.initData;
+
+                // Try to get user ID from initDataUnsafe
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+                    telegramUserId = tg.initDataUnsafe.user.id;
+                }
+
+                // Fallback: parse from initData
+                if (!telegramUserId && initData) {
+                    try {
+                        const params = new URLSearchParams(initData);
+                        const userRaw = params.get("user");
+                        if (userRaw) {
+                            const user = JSON.parse(userRaw);
+                            if (user && user.id) telegramUserId = user.id;
+                        }
+                    } catch (error) {
+                        console.error('Error parsing initData:', error);
+                    }
+                }
+
+                if (telegramUserId) {
+                    const uid = String(telegramUserId);
+                    localStorage.setItem("abj_payment_id", uid);
+                    userId = uid;
+
+                    // Store user's display name
+                    try {
+                        const tgUser = tg.initDataUnsafe.user || 
+                            (initData ? JSON.parse(new URLSearchParams(initData).get('user') || '{}') : {});
+                        const displayName = [tgUser.first_name, tgUser.last_name]
+                            .filter(Boolean).join(' ') || tgUser.username || '';
+                        if (displayName && !localStorage.getItem('abj_user_name')) {
+                            localStorage.setItem('abj_user_name', displayName);
+                        }
+                    } catch (error) {
+                        console.error('Error storing user name:', error);
+                    }
+
+                    // Check if user is admin or creator
+                    const admins = [950747714, 5994127216]; // Your admin IDs
+                    const creators = []; // Add creator IDs if any
+                    
+                    const isAdmin = admins.includes(parseInt(telegramUserId));
+                    const isCreator = creators.includes(parseInt(telegramUserId));
+                    
+                    if (isAdmin) {
+                        localStorage.setItem("abj_role", "admin");
+                        window.location.href = "/admin";
+                    } else if (isCreator) {
+                        localStorage.setItem("abj_role", "creator");
+                        window.location.href = "/Creator";
+                    } else {
+                        localStorage.removeItem("abj_role");
+                        // Normal user - show main content
+                        showMainContent();
+                    }
+                } else {
+                    // No Telegram user ID detected
+                    showMainContent();
+                }
+            }
+
+            // Show main content
+            function showMainContent() {
+                verificationOverlay.style.display = 'none';
+                mainContent.style.display = 'block';
+                
+                // Check payment status
+                checkPaymentStatus();
+                
+                // Check for invite status
+                checkInviteStatus();
+            }
+
+            // Check payment status
+            function checkPaymentStatus() {
+                if (!userId) {
+                    payStatus = "none";
+                    updatePaymentButton();
+                    return;
+                }
+                
+                // Simulate API call - replace with actual API
+                setTimeout(() => {
+                    const status = localStorage.getItem(`abj_payment_status_${userId}`) || 'none';
+                    payStatus = status;
+                    updatePaymentButton();
+                }, 500);
+            }
+
+            // Update payment button based on status
+            function updatePaymentButton() {
+                if (!paymentBtn) return;
+                
+                switch (payStatus) {
+                    case "none":
+                        paymentBtn.textContent = "Get Started";
+                        paymentBtn.disabled = false;
+                        paymentBtn.className = "btn btn-primary";
+                        break;
+                    case "pending":
+                        paymentBtn.textContent = "Pending approval";
+                        paymentBtn.disabled = true;
+                        paymentBtn.className = "btn btn-secondary";
+                        break;
+                    case "approved":
+                        paymentBtn.textContent = "Go to Learning";
+                        paymentBtn.disabled = false;
+                        paymentBtn.className = "btn btn-primary";
+                        paymentBtn.onclick = function() {
+                            window.location.href = "/dashboard";
+                        };
+                        break;
+                    case "rejected":
+                        paymentBtn.textContent = "Get Started";
+                        paymentBtn.disabled = false;
+                        paymentBtn.className = "btn btn-primary";
+                        break;
+                }
+            }
+
+            // Check invite status
+            function checkInviteStatus() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const inviteFromUrl = urlParams.get('invite');
+                const startParam = urlParams.get('start');
+                
+                if ((inviteFromUrl || startParam) && (inviteFromUrl !== userId || startParam !== userId)) {
+                    const inviterId = inviteFromUrl || startParam;
+                    const inviterName = `user ${inviterId}`;
+                    inviteStatus.innerHTML = `
+                        <div style="margin-top: 1rem; padding: 0.75rem; background-color: hsl(var(--brand-50)); border-radius: 0.5rem; font-size: 0.875rem;">
+                            🎉 You were invited by ${inviterName}! Both you and your friend will get special benefits.
+                        </div>
+                    `;
+                    inviteStatus.style.display = 'block';
+                }
+            }
+
+            // Demo button scroll to samples
+            if (demoBtn) {
+                demoBtn.addEventListener('click', function() {
+                    document.getElementById('samples').scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+
+            // Payment button handler - redirect to bot
+            if (paymentBtn) {
+                paymentBtn.addEventListener('click', function() {
+                    if (payStatus === 'approved') {
+                        window.location.href = '/dashboard';
+                    } else {
+                        // Open bot with start command
+                        if (isTelegram) {
+                            window.Telegram.WebApp.openTelegramLink(`https://t.me/${botUser}?start=payment`);
+                        } else {
+                            window.open(`https://t.me/${botUser}?start=payment`, '_blank');
+                        }
+                    }
+                });
+            }
+
+            // Start the application
+            checkTelegramEnvironment();
+        });
     </script>
 </body>
 </html>
