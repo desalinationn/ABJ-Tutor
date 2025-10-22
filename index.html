@@ -11,7 +11,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="ABJ.jpg">
     <style>
-        /* All your existing CSS remains the same */
+        /* All your existing CSS remains exactly the same */
         :root {
             --background: 0 0% 100%;
             --foreground: 222.2 84% 4.9%;
@@ -686,7 +686,7 @@
             margin-bottom: 1rem;
         }
 
-        .bot-username { /* This style is no longer needed after changes, but kept for reference */
+        .bot-username {
             background-color: hsl(var(--brand-100));
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
@@ -706,7 +706,56 @@
             height: auto;
             border-radius: 0.5rem;
             border: 1px solid hsl(var(--border));
-            display: none; /* Hidden by default */
+            display: none;
+        }
+
+        /* Share instructions styling */
+        .share-instructions {
+            background: linear-gradient(135deg, hsl(var(--brand-50)), hsl(var(--brand-100)));
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid hsl(var(--brand-500));
+        }
+
+        .share-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 0.5rem;
+            border: 1px solid hsl(var(--brand-200));
+        }
+
+        .step-number {
+            background: hsl(var(--brand-500));
+            color: white;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: hsl(var(--brand-700));
+        }
+
+        .step-description {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
         }
     </style>
 </head>
@@ -821,11 +870,52 @@
                         </div>
                     </div>
 
+                    <!-- Step 3: Share Instructions -->
+                    <div id="step-3-share" style="display: none;">
+                        <div class="share-instructions">
+                            <h3 style="margin-bottom: 1rem; color: hsl(var(--brand-700));">📤 Final Step: Share Payment Details</h3>
+                            
+                            <div class="share-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <div class="step-title">Copy Payment Information</div>
+                                    <div class="step-description">Copy the text below containing your payment details</div>
+                                </div>
+                            </div>
+
+                            <div class="share-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <div class="step-title">Share with Screenshot</div>
+                                    <div class="step-description">Send the copied text along with your payment screenshot to our channel</div>
+                                </div>
+                            </div>
+
+                            <div class="share-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <div class="step-title">Wait for Approval</div>
+                                    <div class="step-description">We'll review and approve within 24 hours</div>
+                                </div>
+                            </div>
+
+                            <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid hsl(var(--brand-200));">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <strong>Payment Details:</strong>
+                                    <button id="copy-payment-info" class="btn btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">Copy Text</button>
+                                </div>
+                                <div id="payment-info-text" style="background: hsl(var(--muted)); padding: 0.75rem; border-radius: 0.375rem; font-size: 0.75rem; font-family: monospace; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="modal-actions">
                         <button type="button" id="back-to-form" class="btn btn-secondary" style="display: none;">Back</button>
+                        <button type="button" id="back-to-review" class="btn btn-secondary" style="display: none;">Back to Review</button>
                         <button type="button" id="cancel-payment" class="btn btn-secondary">Cancel</button>
                         <button type="button" id="next-step" class="btn btn-primary">Next: Review Information</button>
-                        <button type="button" id="submit-payment" class="btn btn-primary" style="display: none;">Submit Payment</button>
+                        <button type="button" id="proceed-to-share" class="btn btn-primary" style="display: none;">Next: Share Details</button>
+                        <button type="button" id="finish-payment" class="btn btn-primary" style="display: none;">Finish & Share</button>
                     </div>
                     <!-- Hidden file input for screenshot -->
                     <input type="file" id="screenshot-input" accept="image/png, image/jpeg" style="display: none;">
@@ -1019,11 +1109,12 @@
             gender: "",
             semester: "",
             method: "",
-            screenshot: null // To store base64 image data
+            screenshot: null,
+            paymentId: ""
         };
 
         // Payment status tracking
-        let userPaymentStatus = 'none'; // 'none', 'pending', 'approved'
+        let userPaymentStatus = 'none';
 
         // Telegram Web App instance
         let tg = null;
@@ -1033,7 +1124,10 @@
         const paymentBtn = document.getElementById('payment-btn');
         const cancelPaymentBtn = document.getElementById('cancel-payment');
         const backToFormBtn = document.getElementById('back-to-form');
+        const backToReviewBtn = document.getElementById('back-to-review');
         const nextStepBtn = document.getElementById('next-step');
+        const proceedToShareBtn = document.getElementById('proceed-to-share');
+        const finishPaymentBtn = document.getElementById('finish-payment');
         const submitPaymentBtn = document.getElementById('submit-payment');
         const paymentMethodBtns = document.querySelectorAll('.payment-method-btn');
         const semesterSelect = document.getElementById('semester');
@@ -1046,26 +1140,16 @@
         const submissionLoadingOverlay = document.getElementById('submission-loading-overlay');
         const step1Form = document.getElementById('step-1-form');
         const step2ReviewUpload = document.getElementById('step-2-review-upload');
-        const botUsernameDiv = document.querySelector('.bot-username'); // This will be hidden
+        const step3Share = document.getElementById('step-3-share');
+        const copyPaymentInfoBtn = document.getElementById('copy-payment-info');
+        const paymentInfoText = document.getElementById('payment-info-text');
 
         // Main application logic
         document.addEventListener('DOMContentLoaded', function() {
-            // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // Render testimonials
             renderTestimonials();
-
-            // Initialize payment dialog
             initPaymentDialog();
-
-            // Initialize Telegram Web App
             initTelegramWebApp();
-
-            // Hide the bot username section if it exists
-            if (botUsernameDiv) {
-                botUsernameDiv.style.display = 'none';
-            }
         });
 
         // Initialize Telegram Web App
@@ -1074,34 +1158,29 @@
                 tg = window.Telegram.WebApp;
 
                 if (tg.initDataUnsafe) {
-                    // User is in Telegram
                     document.getElementById('verification-overlay').style.display = 'none';
                     document.getElementById('main-content').style.display = 'block';
-
-                    // Expand the Web App to full height
                     tg.expand();
 
-                    // Set up back button
                     tg.BackButton.onClick(() => {
-                        // If payment modal is open, handle its back navigation
                         if (paymentModal.style.display === 'flex') {
-                            if (step2ReviewUpload.style.display === 'block') {
+                            if (step3Share.style.display === 'block') {
+                                showStep2ReviewUpload();
+                            } else if (step2ReviewUpload.style.display === 'block') {
                                 showStep1Form();
                             } else {
                                 paymentModal.style.display = 'none';
                                 resetPaymentForm();
-                                tg.BackButton.hide(); // Hide after closing modal
+                                tg.BackButton.hide();
                             }
                         } else {
                             tg.close();
                         }
                     });
-                    tg.BackButton.hide(); // Initially hide, show when modal opens
+                    tg.BackButton.hide();
 
-                    // Check if user already has payment status
                     checkUserPaymentStatus();
                 } else {
-                    // Not in Telegram, show notice
                     document.getElementById('telegram-notice').style.display = 'flex';
                     document.getElementById('main-content').style.display = 'none';
                 }
@@ -1118,8 +1197,6 @@
             if (!user) return;
 
             const userId = user.id;
-            // In a real implementation, you would check against your backend/database
-            // For now, we'll use localStorage to simulate payment status tracking
             const storedStatus = localStorage.getItem(`abj_payment_status_${userId}`);
 
             if (storedStatus) {
@@ -1145,12 +1222,12 @@
                         showPaymentStatusMessage('Your payment is already under review. Please wait for approval.', 'info');
                         return;
                     } else if (userPaymentStatus === 'approved') {
-                        tg.openTelegramLink('https://t.me/+CQqzsymP_Ms2OTk0'); // Link to channel
+                        tg.openTelegramLink('https://t.me/+CQqzsymP_Ms2OTk0');
                         return;
                     }
                     paymentModal.style.display = 'flex';
-                    tg.BackButton.show(); // Show back button when modal opens
-                    showStep1Form(); // Always start with step 1
+                    tg.BackButton.show();
+                    showStep1Form();
                     resetPaymentForm();
                 });
             }
@@ -1160,13 +1237,18 @@
                 cancelPaymentBtn.addEventListener('click', function() {
                     paymentModal.style.display = 'none';
                     resetPaymentForm();
-                    tg.BackButton.hide(); // Hide back button when modal closes
+                    tg.BackButton.hide();
                 });
             }
 
             // Handle back to form button
             if (backToFormBtn) {
                 backToFormBtn.addEventListener('click', showStep1Form);
+            }
+
+            // Handle back to review button
+            if (backToReviewBtn) {
+                backToReviewBtn.addEventListener('click', showStep2ReviewUpload);
             }
 
             // Handle next step button (moves to review)
@@ -1180,13 +1262,34 @@
                 });
             }
 
+            // Handle proceed to share button
+            if (proceedToShareBtn) {
+                proceedToShareBtn.addEventListener('click', function() {
+                    if (paymentForm.screenshot) {
+                        showStep3Share();
+                    } else {
+                        tg.showAlert('Please upload your payment screenshot first.');
+                    }
+                });
+            }
+
+            // Handle finish payment button
+            if (finishPaymentBtn) {
+                finishPaymentBtn.addEventListener('click', completePaymentProcess);
+            }
+
+            // Handle copy payment info button
+            if (copyPaymentInfoBtn) {
+                copyPaymentInfoBtn.addEventListener('click', copyPaymentInfoToClipboard);
+            }
+
             // Handle semester selection
             if (semesterSelect) {
                 semesterSelect.addEventListener('change', function() {
                     const semester = this.value;
                     updateStreamOptions(semester);
-                    paymentForm.semester = semester; // Update form data
-                    validateFormInputs(); // Re-validate on change
+                    paymentForm.semester = semester;
+                    validateFormInputs();
                 });
             }
 
@@ -1194,7 +1297,7 @@
             if (streamSelect) {
                 streamSelect.addEventListener('change', function() {
                     paymentForm.stream = this.value;
-                    validateFormInputs(); // Re-validate on change
+                    validateFormInputs();
                 });
             }
 
@@ -1203,7 +1306,7 @@
                 btn.addEventListener('click', function() {
                     const method = this.getAttribute('data-method');
                     selectPaymentMethod(method);
-                    validateFormInputs(); // Re-validate on change
+                    validateFormInputs();
                 });
             });
 
@@ -1218,41 +1321,39 @@
                 validateFormInputs();
             });
 
-            // Handle submit payment (after screenshot selection)
+            // Handle screenshot upload
             if (submitPaymentBtn) {
                 uploadInstructionsDiv.addEventListener('click', function() {
-                    screenshotInput.click(); // Trigger hidden file input
+                    screenshotInput.click();
                 });
 
                 screenshotInput.addEventListener('change', function(event) {
                     const file = event.target.files[0];
                     if (file) {
-                        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        if (file.size > 5 * 1024 * 1024) {
                             tg.showAlert('File size exceeds 5MB limit.');
-                            screenshotInput.value = ''; // Clear selection
+                            screenshotInput.value = '';
                             paymentForm.screenshot = null;
                             screenshotPreview.style.display = 'none';
-                            submitPaymentBtn.disabled = true;
+                            proceedToShareBtn.disabled = true;
                             return;
                         }
                         const reader = new FileReader();
                         reader.onload = function(e) {
-                            paymentForm.screenshot = e.target.result; // Base64 string
+                            paymentForm.screenshot = e.target.result;
                             screenshotPreview.src = e.target.result;
                             screenshotPreview.style.display = 'block';
-                            submitPaymentBtn.disabled = false; // Enable submit button
-                            uploadInstructionsDiv.style.border = '2px solid hsl(var(--brand-500))'; // Highlight border
+                            proceedToShareBtn.disabled = false;
+                            uploadInstructionsDiv.style.border = '2px solid hsl(var(--brand-500))';
                         };
                         reader.readAsDataURL(file);
                     } else {
                         paymentForm.screenshot = null;
                         screenshotPreview.style.display = 'none';
-                        submitPaymentBtn.disabled = true;
-                        uploadInstructionsDiv.style.border = '2px dashed hsl(var(--brand-300))'; // Reset border
+                        proceedToShareBtn.disabled = true;
+                        uploadInstructionsDiv.style.border = '2px dashed hsl(var(--brand-300))';
                     }
                 });
-
-                submitPaymentBtn.addEventListener('click', submitPaymentToBot);
             }
 
             // Demo button scroll to samples
@@ -1268,17 +1369,19 @@
         function showStep1Form() {
             step1Form.style.display = 'block';
             step2ReviewUpload.style.display = 'none';
+            step3Share.style.display = 'none';
             backToFormBtn.style.display = 'none';
+            backToReviewBtn.style.display = 'none';
             nextStepBtn.style.display = 'inline-flex';
-            submitPaymentBtn.style.display = 'none';
+            proceedToShareBtn.style.display = 'none';
+            finishPaymentBtn.style.display = 'none';
             nextStepBtn.textContent = 'Next: Review Information';
-            validateFormInputs(); // Ensure validation on step change
-            tg.MainButton.hide(); // Hide Telegram's main button for custom flow
-            tg.BackButton.hide(); // Hide Telegram back button in step 1 of modal
+            validateFormInputs();
+            tg.MainButton.hide();
+            tg.BackButton.hide();
         }
 
         function showStep2ReviewUpload() {
-            // Populate review section with current form data
             document.getElementById('review-fullName').textContent = paymentForm.fullName || '-';
             document.getElementById('review-semester').textContent = paymentForm.semester || '-';
             document.getElementById('review-stream').textContent = paymentForm.stream || '-';
@@ -1287,16 +1390,54 @@
 
             step1Form.style.display = 'none';
             step2ReviewUpload.style.display = 'block';
+            step3Share.style.display = 'none';
             backToFormBtn.style.display = 'inline-flex';
+            backToReviewBtn.style.display = 'none';
             nextStepBtn.style.display = 'none';
-            submitPaymentBtn.style.display = 'inline-flex';
-            submitPaymentBtn.disabled = !paymentForm.screenshot; // Only enable if screenshot is already selected
-            tg.BackButton.show(); // Show Telegram back button in step 2 of modal
+            proceedToShareBtn.style.display = 'inline-flex';
+            finishPaymentBtn.style.display = 'none';
+            proceedToShareBtn.disabled = !paymentForm.screenshot;
+            tg.BackButton.show();
+        }
+
+        function showStep3Share() {
+            // Generate unique payment ID
+            paymentForm.paymentId = 'ABJ' + Date.now() + Math.random().toString(36).substr(2, 5).toUpperCase();
+            
+            // Prepare payment information text
+            const user = tg.initDataUnsafe.user;
+            const paymentInfo = `
+💰 ABJ TUTORIAL PAYMENT SUBMISSION
+
+Payment ID: ${paymentForm.paymentId}
+Full Name: ${paymentForm.fullName}
+Semester: ${paymentForm.semester}
+Stream: ${paymentForm.stream}
+Gender: ${paymentForm.gender}
+Payment Method: ${paymentForm.method}
+Telegram User: ${user.first_name} ${user.last_name || ''} (@${user.username || 'no_username'})
+User ID: ${user.id}
+Timestamp: ${new Date().toLocaleString()}
+
+Please approve this payment submission.
+            `.trim();
+
+            paymentInfoText.textContent = paymentInfo;
+
+            step1Form.style.display = 'none';
+            step2ReviewUpload.style.display = 'none';
+            step3Share.style.display = 'block';
+            backToFormBtn.style.display = 'none';
+            backToReviewBtn.style.display = 'inline-flex';
+            nextStepBtn.style.display = 'none';
+            proceedToShareBtn.style.display = 'none';
+            finishPaymentBtn.style.display = 'inline-flex';
+            tg.BackButton.show();
         }
 
         // Update stream options based on semester
         function updateStreamOptions(semester) {
-            streamSelect.innerHTML = '<option value="">Select stream</option>'; // Clear existing options
+            streamSelect.innerHTML = '<option value="">Select stream</option>';
             if (semester === 'First Semester') {
                 streamSelect.innerHTML += `
                     <option value="Social">Social Science</option>
@@ -1311,7 +1452,7 @@
                 `;
             }
             streamSelect.disabled = !semester;
-            paymentForm.stream = ''; // Reset stream when semester changes
+            paymentForm.stream = '';
             streamSelect.value = '';
         }
 
@@ -1319,13 +1460,11 @@
         function selectPaymentMethod(method) {
             paymentForm.method = method;
 
-            // Update UI
             document.querySelectorAll('.payment-method-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`.payment-method-btn[data-method="${method}"]`).classList.add('active');
 
-            // Show payment instructions
             const instructions = document.getElementById('payment-instructions');
             instructions.style.display = 'block';
 
@@ -1345,6 +1484,58 @@
             return isValid;
         }
 
+        // Copy payment info to clipboard
+        function copyPaymentInfoToClipboard() {
+            const textToCopy = paymentInfoText.textContent;
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                copyPaymentInfoBtn.textContent = 'Copied!';
+                copyPaymentInfoBtn.style.backgroundColor = 'hsl(var(--brand-600))';
+                setTimeout(() => {
+                    copyPaymentInfoBtn.textContent = 'Copy Text';
+                    copyPaymentInfoBtn.style.backgroundColor = '';
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Failed to copy text: ', err);
+                tg.showAlert('Failed to copy text. Please select and copy manually.');
+            });
+        }
+
+        // Complete payment process
+        function completePaymentProcess() {
+            const user = tg.initDataUnsafe.user;
+            if (!user) {
+                tg.showAlert("User information not available. Please try again.");
+                return;
+            }
+
+            // Store payment status
+            const userId = user.id;
+            userPaymentStatus = 'pending';
+            localStorage.setItem(`abj_payment_status_${userId}`, 'pending');
+
+            // Close modal and reset form
+            paymentModal.style.display = 'none';
+            resetPaymentForm();
+            tg.BackButton.hide();
+
+            // Show success message
+            showPaymentStatusMessage(
+                `✅ <b>Payment Process Started!</b><br><br>` +
+                `<b>Payment ID:</b> <code>${paymentForm.paymentId}</code><br><br>` +
+                `Please send the payment details and screenshot to our channel. ` +
+                `We will review and approve within 24 hours.`,
+                'success'
+            );
+
+            // Update UI
+            updatePaymentButton('pending');
+
+            // Open channel for user to send the information
+            setTimeout(() => {
+                tg.openTelegramLink('https://t.me/Mejido'); // Replace with your actual channel
+            }, 1000);
+        }
+
         // Reset payment form
         function resetPaymentForm() {
             paymentForm = {
@@ -1353,7 +1544,8 @@
                 gender: "",
                 semester: "",
                 method: "",
-                screenshot: null
+                screenshot: null,
+                paymentId: ""
             };
 
             fullNameInput.value = '';
@@ -1365,92 +1557,14 @@
                 btn.classList.remove('active');
             });
             document.getElementById('payment-instructions').style.display = 'none';
-            screenshotInput.value = ''; // Clear file input
+            screenshotInput.value = '';
             screenshotPreview.style.display = 'none';
             screenshotPreview.src = '';
-            uploadInstructionsDiv.style.border = '2px dashed hsl(var(--brand-300))'; // Reset border
+            uploadInstructionsDiv.style.border = '2px dashed hsl(var(--brand-300))';
+            paymentInfoText.textContent = '';
 
             nextStepBtn.disabled = true;
-            submitPaymentBtn.disabled = true;
-        }
-
-        // Submit payment to Telegram bot
-        async function submitPaymentToBot() {
-            if (!paymentForm.fullName || !paymentForm.stream || !paymentForm.gender ||
-                !paymentForm.semester || !paymentForm.method) {
-                tg.showAlert("Please complete all fields in Step 1.");
-                return;
-            }
-
-            if (!paymentForm.screenshot) {
-                tg.showAlert("Please upload your payment screenshot.");
-                return;
-            }
-
-            if (!tg) {
-                tg.showAlert("Telegram Web App not available. Please try again in Telegram.");
-                return;
-            }
-
-            // Show loading overlay
-            submissionLoadingOverlay.style.display = 'flex';
-
-            const user = tg.initDataUnsafe.user;
-            if (!user) {
-                tg.showAlert("User information not available. Please try again.");
-                submissionLoadingOverlay.style.display = 'none';
-                return;
-            }
-
-            // Store payment status in localStorage (simulating database)
-            const userId = user.id;
-            userPaymentStatus = 'pending';
-            localStorage.setItem(`abj_payment_status_${userId}`, 'pending');
-
-            // Prepare payment data including the base64 screenshot
-            const paymentData = {
-                action: 'submit_payment',
-                fullName: paymentForm.fullName,
-                stream: paymentForm.stream,
-                gender: paymentForm.gender,
-                semester: paymentForm.semester,
-                paymentMethod: paymentForm.method,
-                screenshot: paymentForm.screenshot, // Base64 image data
-                timestamp: new Date().toISOString(),
-                user: { // Send only necessary user info, not the full tg.initDataUnsafe.user object
-                    id: user.id,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    username: user.username,
-                }
-            };
-
-            try {
-                // Send payment data to bot
-                tg.sendData(JSON.stringify(paymentData));
-
-                // Close modal and reset form
-                paymentModal.style.display = 'none';
-                resetPaymentForm();
-                tg.BackButton.hide(); // Hide back button after closing modal
-
-                // Update main page UI (e.g., disable 'Get Started' button)
-                updatePaymentButton('pending');
-
-                // Show success message with instruction that admin will review
-                showPaymentStatusMessage(
-                    `✅ <b>Payment Details Submitted Successfully!</b><br><br>` +
-                    `Your payment is now under review. We will notify you here when it's approved.`,
-                    'success'
-                );
-
-            } catch (error) {
-                console.error('Error sending payment data:', error);
-                tg.showAlert("There was an error submitting your payment. Please try again.");
-            } finally {
-                // Hide loading overlay
-                submissionLoadingOverlay.style.display = 'none';
-            }
+            proceedToShareBtn.disabled = true;
         }
 
         // Show payment status message on main page
@@ -1469,10 +1583,16 @@
                     paymentBtn.textContent = "Get Started";
                     paymentBtn.disabled = false;
                     paymentBtn.className = "btn btn-primary";
+                    paymentBtn.onclick = function() {
+                        paymentModal.style.display = 'flex';
+                        tg.BackButton.show();
+                        showStep1Form();
+                        resetPaymentForm();
+                    };
                     break;
                 case "pending":
                     paymentBtn.textContent = "Payment Under Review";
-                    paymentBtn.disabled = true; // Disable button to prevent multiple submissions
+                    paymentBtn.disabled = true;
                     paymentBtn.className = "btn btn-secondary";
                     break;
                 case "approved":
@@ -1481,7 +1601,7 @@
                     paymentBtn.className = "btn btn-primary";
                     paymentBtn.onclick = function() {
                         if (tg) {
-                            tg.openTelegramLink('https://t.me/+CQqzsymP_Ms2OTk0'); // Link to main channel
+                            tg.openTelegramLink('https://t.me/+CQqzsymP_Ms2OTk0');
                         }
                     };
                     break;
@@ -1491,11 +1611,8 @@
         // Render testimonials function
         function renderTestimonials() {
             const marqueeContent = document.getElementById('marquee-content');
-
-            // Clear existing content
             marqueeContent.innerHTML = '';
 
-            // Create all 14 testimonials
             testimonials.forEach(testimonial => {
                 const testimonialElement = document.createElement('div');
                 testimonialElement.className = 'testimonial-item';
@@ -1516,21 +1633,14 @@
                 marqueeContent.appendChild(testimonialElement);
             });
 
-            // Duplicate testimonials for seamless scrolling
             const testimonialsClone = marqueeContent.cloneNode(true);
             marqueeContent.appendChild(testimonialsClone);
 
-            // Add click event to toggle animation and add blue background
             const testimonialCards = document.querySelectorAll('.testimonial-card');
             testimonialCards.forEach(card => {
                 card.addEventListener('click', function() {
-                    // Toggle marquee animation
                     marqueeContent.classList.toggle('paused');
-
-                    // Remove active class from all cards
                     testimonialCards.forEach(c => c.classList.remove('active'));
-
-                    // Add active class to clicked card
                     this.classList.add('active');
                 });
             });
