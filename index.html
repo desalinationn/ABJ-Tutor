@@ -987,7 +987,7 @@
         ];
 
         // Payment status tracking
-        let userPaymentStatus = 'none'; // 'none', 'pending', 'approved', 'rejected'
+        let userPaymentStatus = 'none';
 
         // Telegram Web App instance
         let tg = null;
@@ -995,11 +995,6 @@
         // Elements
         const getStartedBtn = document.getElementById('get-started-btn');
         const demoBtn = document.getElementById('demo-btn');
-        const paymentStatusDiv = document.getElementById('payment-status'); // New element to show message
-
-        // Constants
-        const BOT_USERNAME = "abjjubot"; // Ensure this matches your bot's username
-        const ACCESS_CHANNEL_LINK = "https://t.me/+CQqzsymP_Ms2OTk0"; // Your main channel link
 
         // Main application logic
         document.addEventListener('DOMContentLoaded', function() {
@@ -1013,7 +1008,7 @@
             try {
                 tg = window.Telegram.WebApp;
 
-                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                if (tg.initDataUnsafe) {
                     document.getElementById('verification-overlay').style.display = 'none';
                     document.getElementById('main-content').style.display = 'block';
                     tg.expand();
@@ -1023,33 +1018,7 @@
                     });
                     tg.BackButton.hide(); // Hide Back button by default
 
-                    // Request user status from bot
-                    tg.sendData(JSON.stringify({ command: 'get_user_status' }));
-                    
-                    // Listen for data from the bot
-                    tg.onEvent('invoiceClosed', function(status){
-                        if (status === 'paid') {
-                            showPaymentStatusMessage('Payment successful! Your access will be approved shortly.', 'success');
-                            // Optionally, refresh status
-                            tg.sendData(JSON.stringify({ command: 'get_user_status' }));
-                        } else if (status === 'cancelled') {
-                            showPaymentStatusMessage('Payment cancelled.', 'info');
-                        }
-                    });
-
-                    tg.onEvent('themeChanged', function() {
-                        // Handle theme changes if needed
-                        document.body.style.backgroundColor = tg.themeParams.bg_color;
-                        document.body.style.color = tg.themeParams.text_color;
-                    });
-                    
-                    // Listen for messages coming from the bot
-                    window.addEventListener('message', function(event) {
-                        if (event.origin === window.location.origin && event.data && event.data.type === 'bot_user_status') {
-                            updateGetStartedButton(event.data.status);
-                        }
-                    });
-
+                    checkUserPaymentStatus();
                 } else {
                     document.getElementById('telegram-notice').style.display = 'flex';
                     document.getElementById('main-content').style.display = 'none';
@@ -1061,39 +1030,56 @@
             }
         }
 
+        // Check user payment status
+        function checkUserPaymentStatus() {
+            const user = tg.initDataUnsafe.user;
+            if (!user) return;
+
+            const userId = user.id;
+            const storedStatus = localStorage.getItem(`abj_payment_status_${userId}`);
+
+            if (storedStatus) {
+                userPaymentStatus = storedStatus;
+                updateGetStartedButton(storedStatus);
+
+                if (storedStatus === 'pending') {
+                    showPaymentStatusMessage('Your payment is under review. We will notify you when it\'s approved.', 'info');
+                } else if (storedStatus === 'approved') {
+                    showPaymentStatusMessage('Your payment has been approved! You can now access all content.', 'success');
+                }
+            } else {
+                updateGetStartedButton('none');
+            }
+        }
+
         // Show payment status message on main page
         function showPaymentStatusMessage(message, type = 'info') {
+            const paymentStatusDiv = document.getElementById('payment-status');
             paymentStatusDiv.innerHTML = `<div class="success-message ${type === 'success' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">${message}</div>`;
             paymentStatusDiv.style.display = 'block';
         }
 
         // Update Get Started button based on status
         function updateGetStartedButton(status) {
-            userPaymentStatus = status; // Update the global status variable
             if (!getStartedBtn) return;
+
+            const botUsername = "abjjubot"; // Correct bot username
 
             switch (status) {
                 case "none":
-                case "rejected": // If rejected, allow them to register again
                     getStartedBtn.textContent = "Get Started";
                     getStartedBtn.disabled = false;
                     getStartedBtn.className = "btn btn-primary";
                     getStartedBtn.onclick = function() {
                         if (tg) {
-                            tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=register`);
+                            tg.openTelegramLink(`https://t.me/${botUsername}?start=register`);
                         }
                     };
-                    if (status === "rejected") {
-                        showPaymentStatusMessage('Your previous payment was rejected. Please re-register or contact support.', 'info');
-                    } else {
-                        paymentStatusDiv.style.display = 'none'; // Hide if no message needed
-                    }
                     break;
                 case "pending":
                     getStartedBtn.textContent = "Payment Under Review";
                     getStartedBtn.disabled = true;
                     getStartedBtn.className = "btn btn-secondary";
-                    showPaymentStatusMessage('Your payment is under review. We will notify you when it\'s approved.', 'info');
                     break;
                 case "approved":
                     getStartedBtn.textContent = "Access Content";
@@ -1101,22 +1087,9 @@
                     getStartedBtn.className = "btn btn-primary";
                     getStartedBtn.onclick = function() {
                         if (tg) {
-                            tg.openTelegramLink(ACCESS_CHANNEL_LINK);
+                            tg.openTelegramLink('https://t.me/+CQqzsymP_Ms2OTk0'); // Your main channel link
                         }
                     };
-                    showPaymentStatusMessage('Your payment has been approved! You can now access all content.', 'success');
-                    break;
-                default:
-                    // Fallback for unknown status
-                    getStartedBtn.textContent = "Get Started";
-                    getStartedBtn.disabled = false;
-                    getStartedBtn.className = "btn btn-primary";
-                    getStartedBtn.onclick = function() {
-                        if (tg) {
-                            tg.openTelegramLink(`https://t.me/${BOT_USERNAME}?start=register`);
-                        }
-                    };
-                    paymentStatusDiv.style.display = 'none';
                     break;
             }
         }
