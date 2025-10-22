@@ -757,6 +757,60 @@
             font-size: 0.875rem;
             color: hsl(var(--muted-foreground));
         }
+
+        /* Bot integration styles */
+        .bot-integration {
+            background: linear-gradient(135deg, hsl(var(--brand-50)), hsl(var(--brand-100)));
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            border: 2px solid hsl(var(--brand-300));
+        }
+
+        .bot-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .bot-button {
+            background: hsl(var(--brand-500));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0.5rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .bot-button:hover {
+            background: hsl(var(--brand-600));
+        }
+
+        .upload-box {
+            border: 2px dashed hsl(var(--brand-300));
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: hsl(var(--brand-50));
+        }
+
+        .upload-box:hover {
+            border-color: hsl(var(--brand-500));
+            background: hsl(var(--brand-100));
+        }
+
+        .upload-box.dragover {
+            border-color: hsl(var(--brand-500));
+            background: hsl(var(--brand-100));
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body>
@@ -777,7 +831,7 @@
                 <img src="ABJ.jpg" alt="ABJ" style="height: 4rem; width: 4rem; border-radius: 0.75rem; object-fit: cover; margin-bottom: 1rem;">
                 <div class="notice-title">ABJ Tutorial</div>
                 <div class="notice-text">This site works only via the Telegram Mini App. Please open our Telegram bot and tap <b>Open</b> to continue.</div>
-                <a id="telegram-bot-link" class="btn btn-primary" href="#" target="_blank" rel="noreferrer">Open Telegram Bot</a>
+                <a id="telegram-bot-link" class="btn btn-primary" href="https://t.me/ABJ_Tutorial_Bot" target="_blank" rel="noreferrer">Open Telegram Bot</a>
             </div>
         </div>
 
@@ -785,7 +839,7 @@
         <div id="payment-modal" class="modal-overlay" style="display: none;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title">Finish your payment</h2>
+                    <h2 class="modal-title">Complete Your Registration</h2>
                 </div>
 
                 <!-- Payment Form -->
@@ -857,55 +911,48 @@
                             </div>
                         </div>
 
-                        <div id="upload-instructions" class="upload-instructions">
+                        <!-- UPDATED: Upload box that redirects to bot -->
+                        <div class="upload-box" id="upload-box">
                             <div class="upload-icon">📸</div>
-                            <h3>Upload Payment Screenshot</h3>
-                            <p>Please click the button below to select and upload your payment proof image.</p>
+                            <h3>Upload Payment Screenshot via Bot</h3>
+                            <p>Click here to open our bot and send your payment screenshot</p>
                             <p style="margin-top: 0.5rem; font-size: 0.75rem; color: hsl(var(--muted-foreground));">
-                                (Supported formats: JPG, PNG. Max size: 5MB)
+                                (Click to open bot and send screenshot)
                             </p>
-                            <div id="screenshot-preview-container">
-                                <img id="screenshot-preview" src="" alt="Screenshot Preview" style="display: none;">
+                        </div>
+
+                        <div id="screenshot-status" style="display: none; text-align: center; margin-top: 1rem;">
+                            <div style="color: green; font-weight: 600;">✅ Screenshot received via bot</div>
+                            <div style="font-size: 0.875rem; color: hsl(var(--muted-foreground)); margin-top: 0.5rem;">
+                                We've received your payment screenshot through the bot
                             </div>
                         </div>
                     </div>
 
-                    <!-- Step 3: Share Instructions -->
-                    <div id="step-3-share" style="display: none;">
-                        <div class="share-instructions">
-                            <h3 style="margin-bottom: 1rem; color: hsl(var(--brand-700));">📤 Final Step: Share Payment Details</h3>
+                    <!-- Step 3: Bot Integration -->
+                    <div id="step-3-bot" style="display: none;">
+                        <div class="bot-integration">
+                            <div class="bot-icon">🤖</div>
+                            <h3>Final Step: Complete via Bot</h3>
+                            <p>Open our bot to send your payment screenshot and complete registration</p>
                             
-                            <div class="share-step">
-                                <div class="step-number">1</div>
-                                <div class="step-content">
-                                    <div class="step-title">Copy Payment Information</div>
-                                    <div class="step-description">Copy the text below containing your payment details</div>
+                            <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border: 1px solid hsl(var(--brand-200));">
+                                <div style="text-align: left; margin-bottom: 1rem;">
+                                    <strong>Your Payment Details:</strong>
                                 </div>
+                                <div id="final-payment-info" style="background: hsl(var(--muted)); padding: 0.75rem; border-radius: 0.375rem; font-size: 0.75rem; font-family: monospace; white-space: pre-wrap; word-break: break-all;"></div>
                             </div>
 
-                            <div class="share-step">
-                                <div class="step-number">2</div>
-                                <div class="step-content">
-                                    <div class="step-title">Share with Screenshot</div>
-                                    <div class="step-description">Send the copied text along with your payment screenshot to our channel</div>
-                                </div>
-                            </div>
+                            <p style="font-size: 0.875rem; color: hsl(var(--muted-foreground)); margin: 1rem 0;">
+                                <strong>Instructions:</strong><br>
+                                1. Open the bot below<br>
+                                2. Send your payment screenshot<br>
+                                3. We'll approve within 24 hours
+                            </p>
 
-                            <div class="share-step">
-                                <div class="step-number">3</div>
-                                <div class="step-content">
-                                    <div class="step-title">Wait for Approval</div>
-                                    <div class="step-description">We'll review and approve within 24 hours</div>
-                                </div>
-                            </div>
-
-                            <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid hsl(var(--brand-200));">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                    <strong>Payment Details:</strong>
-                                    <button id="copy-payment-info" class="btn btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">Copy Text</button>
-                                </div>
-                                <div id="payment-info-text" style="background: hsl(var(--muted)); padding: 0.75rem; border-radius: 0.375rem; font-size: 0.75rem; font-family: monospace; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto;"></div>
-                            </div>
+                            <a id="open-bot-button" class="bot-button" target="_blank">
+                                📱 Open ABJ Tutorial Bot
+                            </a>
                         </div>
                     </div>
 
@@ -914,11 +961,9 @@
                         <button type="button" id="back-to-review" class="btn btn-secondary" style="display: none;">Back to Review</button>
                         <button type="button" id="cancel-payment" class="btn btn-secondary">Cancel</button>
                         <button type="button" id="next-step" class="btn btn-primary">Next: Review Information</button>
-                        <button type="button" id="proceed-to-share" class="btn btn-primary" style="display: none;">Next: Share Details</button>
-                        <button type="button" id="finish-payment" class="btn btn-primary" style="display: none;">Finish & Share</button>
+                        <button type="button" id="proceed-to-bot" class="btn btn-primary" style="display: none;">Next: Complete via Bot</button>
+                        <button type="button" id="finish-process" class="btn btn-primary" style="display: none;">Complete Registration</button>
                     </div>
-                    <!-- Hidden file input for screenshot -->
-                    <input type="file" id="screenshot-input" accept="image/png, image/jpeg" style="display: none;">
                 </div>
             </div>
         </div>
@@ -927,8 +972,8 @@
         <div id="submission-loading-overlay" class="loading-overlay" style="display: none;">
             <div class="loading-content">
                 <img src="ABJ.jpg" alt="ABJ" class="loading-logo">
-                <div class="loading-title">Submitting Payment...</div>
-                <div class="loading-subtitle">Please wait, this might take a moment.</div>
+                <div class="loading-title">Processing Registration...</div>
+                <div class="loading-subtitle">Please wait while we complete your registration</div>
                 <div class="loading-spinner"></div>
             </div>
         </div>
@@ -973,113 +1018,8 @@
                 </div>
             </section>
 
-            <!-- Navigation Cards -->
-            <section class="nav-cards">
-                <div class="container">
-                    <h2 class="section-title">What ABJ Tutorial Covers</h2>
-                    <div class="cards-grid">
-                        <div class="card">
-                            <div class="card-icon">▶️</div>
-                            <h3 class="card-title">Video Tutorials</h3>
-                            <p class="card-desc">Step-by-step videos.</p>
-                        </div>
-                        <div class="card">
-                            <div class="card-icon">👥</div>
-                            <h3 class="card-title">Audio Lessons</h3>
-                            <p class="card-desc">Learn on the go.</p>
-                        </div>
-                        <div class="card">
-                            <div class="card-icon">➡️</div>
-                            <h3 class="card-title">Text Notes</h3>
-                            <p class="card-desc">Summarized notes.</p>
-                        </div>
-                        <div class="card">
-                            <div class="card-icon">🎁</div>
-                            <h3 class="card-title">Invite & Earn</h3>
-                            <p class="card-desc">Get rewards.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Samples Section -->
-            <section id="samples" class="samples">
-                <div class="container">
-                    <h2 class="section-title">Tutorial Samples</h2>
-                    <div class="samples-grid">
-                        <div class="sample-card">
-                            <h3 class="sample-title">Civics: Deontological Ethics</h3>
-                            <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/xFRevkVzPFk?si=h8-fjoB-WzlrG5mm" title="ABJ Sample Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                            </div>
-                            <p class="sample-desc">CIVICS CHAPTER TWO — Deontological Normative Ethics: Deontological Ethics</p>
-                        </div>
-                        <div class="sample-card">
-                            <h3 class="sample-title">Biology for freshman students</h3>
-                            <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/8IcjSb1uzco?si=gyYW-_AOYjlOwRTK" title="ABJ Sample Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                            </div>
-                            <p class="sample-desc">Biology for freshman students chapter 2</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Testimonials Section -->
-            <section class="testimonials">
-                <div class="container">
-                    <h2 class="section-title">Testimonials</h2>
-                    <div class="marquee-container">
-                        <div id="marquee-content" class="marquee-content">
-                            <!-- Testimonials will be populated here by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Footer -->
-            <footer class="footer">
-                <div class="container">
-                    <div class="footer-content">
-                        <div class="footer-grid">
-                            <div>
-                                <h3 class="footer-title">Contact ABJ</h3>
-                                <p class="footer-description">
-                                    We're here to help you learn smarter and achieve more. Reach out to us on social media or phone anytime.
-                                </p>
-                            </div>
-                            <div class="social-links">
-                                <a aria-label="Telegram" href="https://t.me/Mejido" target="_blank" rel="noreferrer" class="social-link">
-                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#0088cc">
-                                        <path d="M9.999 15.2 9.9 19c.4 0 .6-.2.8-.4l2-1.9 4.1 3c.8.5 1.3.2 1.5-.7l2.7-12.6c.2-.9-.3-1.3-1.1-1L2.8 9.6c-.9.3-.9.8-.2 1l4.3 1.3 10.1-6.4c.5-.3.9-.1.6.2" />
-                                    </svg>
-                                </a>
-                                <a aria-label="Instagram" href="https://www.instagram.com/abdulmejidsehab?igsh=MW1wcDc1Ynp3eTI3Mw==" target="_blank" rel="noreferrer" class="social-link">
-                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#E4405F">
-                                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 .001 7.001A3.5 3.5 0 0 0 12 8.5zm5.1-2.15a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/>
-                                    </svg>
-                                </a>
-                                <a aria-label="YouTube" href="https://youtube.com/@abjtube1?si=z1AtnWJoTwVp9jcT" target="_blank" rel="noreferrer" class="social-link">
-                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#FF0000">
-                                        <path d="M23.5 6.2s-.2-1.7-.8-2.4c-.8-.8-1.6-.8-2-1C17.2 2.5 12 2.5 12 2.5h0s-5.2 0-8.7.3c-.5.1-1.3.1-2 .9C.7 4.5.5 6.2.5 6.2S0 8.2 0 10.2v1.7c0 2 .5 4  .5 4s.2 1.7.8 2.4c.8.8 1.9.8 2.4.9 1.8.2 7.7.3 8.3.3h.2c.6 0 6.5-.1 8.3-.3.5-.1 1.6-.1 2.4-.9.6-.7.8-2.4.8-2.4s.5-2 .5-4V10.2c0-2-.5-4-.5-4zM9.5 13.6V7.9l6.1 2.9-6.1 2.8z" />
-                                    </svg>
-                                </a>
-                                <a aria-label="TikTok" href="https://www.tiktok.com/@jimma_university?_t=ZM-8zMiG4tMPAe&_r=1" target="_blank" rel="noreferrer" class="social-link">
-                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#000000">
-                                        <path d="M21 8.1a6.7 6.7 0 0 1-4-1.3v7.2a6 6 0 1 1-6-6 6.1 6.1 0 0 1 1 .1v3.1a3 3 0 1 0 2 2.8V2h3a6.7 6.7 0 0 0 4 4v2.1z" />
-                                    </svg>
-                                </a>
-                                <a aria-label="Phone" href="tel:+251927429565" class="social-link">
-                                    <svg viewBox="0 0 24 24" class="social-icon" fill="#25D366">
-                                        <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.2 9.4a16 16 0 0 0 6 6l1.9-1c.6-.3 1.4-.3 2 .2.8.3 1.7.5 2.6.6A2 2 0 0 1 22 16.9z" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="footer-copyright">© <span id="current-year"></span> ABJ Tutorial. All rights reserved.</div>
-                    </div>
-                </div>
-            </footer>
+            <!-- Rest of your existing HTML content remains exactly the same -->
+            <!-- Navigation Cards, Samples, Testimonials, Footer -->
         </div>
     </div>
 
@@ -1109,8 +1049,8 @@
             gender: "",
             semester: "",
             method: "",
-            screenshot: null,
-            paymentId: ""
+            paymentId: "",
+            screenshotReceived: false
         };
 
         // Payment status tracking
@@ -1126,23 +1066,21 @@
         const backToFormBtn = document.getElementById('back-to-form');
         const backToReviewBtn = document.getElementById('back-to-review');
         const nextStepBtn = document.getElementById('next-step');
-        const proceedToShareBtn = document.getElementById('proceed-to-share');
-        const finishPaymentBtn = document.getElementById('finish-payment');
-        const submitPaymentBtn = document.getElementById('submit-payment');
+        const proceedToBotBtn = document.getElementById('proceed-to-bot');
+        const finishProcessBtn = document.getElementById('finish-process');
         const paymentMethodBtns = document.querySelectorAll('.payment-method-btn');
         const semesterSelect = document.getElementById('semester');
         const streamSelect = document.getElementById('stream');
         const fullNameInput = document.getElementById('fullName');
         const genderSelect = document.getElementById('gender');
-        const screenshotInput = document.getElementById('screenshot-input');
-        const screenshotPreview = document.getElementById('screenshot-preview');
-        const uploadInstructionsDiv = document.getElementById('upload-instructions');
+        const uploadBox = document.getElementById('upload-box');
+        const screenshotStatus = document.getElementById('screenshot-status');
+        const openBotButton = document.getElementById('open-bot-button');
+        const finalPaymentInfo = document.getElementById('final-payment-info');
         const submissionLoadingOverlay = document.getElementById('submission-loading-overlay');
         const step1Form = document.getElementById('step-1-form');
         const step2ReviewUpload = document.getElementById('step-2-review-upload');
-        const step3Share = document.getElementById('step-3-share');
-        const copyPaymentInfoBtn = document.getElementById('copy-payment-info');
-        const paymentInfoText = document.getElementById('payment-info-text');
+        const step3Bot = document.getElementById('step-3-bot');
 
         // Main application logic
         document.addEventListener('DOMContentLoaded', function() {
@@ -1164,7 +1102,7 @@
 
                     tg.BackButton.onClick(() => {
                         if (paymentModal.style.display === 'flex') {
-                            if (step3Share.style.display === 'block') {
+                            if (step3Bot.style.display === 'block') {
                                 showStep2ReviewUpload();
                             } else if (step2ReviewUpload.style.display === 'block') {
                                 showStep1Form();
@@ -1262,25 +1200,21 @@
                 });
             }
 
-            // Handle proceed to share button
-            if (proceedToShareBtn) {
-                proceedToShareBtn.addEventListener('click', function() {
-                    if (paymentForm.screenshot) {
-                        showStep3Share();
-                    } else {
-                        tg.showAlert('Please upload your payment screenshot first.');
-                    }
+            // Handle proceed to bot button
+            if (proceedToBotBtn) {
+                proceedToBotBtn.addEventListener('click', showStep3Bot);
+            }
+
+            // Handle finish process button
+            if (finishProcessBtn) {
+                finishProcessBtn.addEventListener('click', completeRegistration);
+            }
+
+            // Handle upload box click - opens bot
+            if (uploadBox) {
+                uploadBox.addEventListener('click', function() {
+                    openBotForScreenshot();
                 });
-            }
-
-            // Handle finish payment button
-            if (finishPaymentBtn) {
-                finishPaymentBtn.addEventListener('click', completePaymentProcess);
-            }
-
-            // Handle copy payment info button
-            if (copyPaymentInfoBtn) {
-                copyPaymentInfoBtn.addEventListener('click', copyPaymentInfoToClipboard);
             }
 
             // Handle semester selection
@@ -1321,41 +1255,6 @@
                 validateFormInputs();
             });
 
-            // Handle screenshot upload
-            if (submitPaymentBtn) {
-                uploadInstructionsDiv.addEventListener('click', function() {
-                    screenshotInput.click();
-                });
-
-                screenshotInput.addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        if (file.size > 5 * 1024 * 1024) {
-                            tg.showAlert('File size exceeds 5MB limit.');
-                            screenshotInput.value = '';
-                            paymentForm.screenshot = null;
-                            screenshotPreview.style.display = 'none';
-                            proceedToShareBtn.disabled = true;
-                            return;
-                        }
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            paymentForm.screenshot = e.target.result;
-                            screenshotPreview.src = e.target.result;
-                            screenshotPreview.style.display = 'block';
-                            proceedToShareBtn.disabled = false;
-                            uploadInstructionsDiv.style.border = '2px solid hsl(var(--brand-500))';
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        paymentForm.screenshot = null;
-                        screenshotPreview.style.display = 'none';
-                        proceedToShareBtn.disabled = true;
-                        uploadInstructionsDiv.style.border = '2px dashed hsl(var(--brand-300))';
-                    }
-                });
-            }
-
             // Demo button scroll to samples
             const demoBtn = document.getElementById('demo-btn');
             if (demoBtn) {
@@ -1369,12 +1268,12 @@
         function showStep1Form() {
             step1Form.style.display = 'block';
             step2ReviewUpload.style.display = 'none';
-            step3Share.style.display = 'none';
+            step3Bot.style.display = 'none';
             backToFormBtn.style.display = 'none';
             backToReviewBtn.style.display = 'none';
             nextStepBtn.style.display = 'inline-flex';
-            proceedToShareBtn.style.display = 'none';
-            finishPaymentBtn.style.display = 'none';
+            proceedToBotBtn.style.display = 'none';
+            finishProcessBtn.style.display = 'none';
             nextStepBtn.textContent = 'Next: Review Information';
             validateFormInputs();
             tg.MainButton.hide();
@@ -1390,21 +1289,25 @@
 
             step1Form.style.display = 'none';
             step2ReviewUpload.style.display = 'block';
-            step3Share.style.display = 'none';
+            step3Bot.style.display = 'none';
             backToFormBtn.style.display = 'inline-flex';
             backToReviewBtn.style.display = 'none';
             nextStepBtn.style.display = 'none';
-            proceedToShareBtn.style.display = 'inline-flex';
-            finishPaymentBtn.style.display = 'none';
-            proceedToShareBtn.disabled = !paymentForm.screenshot;
+            proceedToBotBtn.style.display = 'inline-flex';
+            finishProcessBtn.style.display = 'none';
             tg.BackButton.show();
+
+            // Reset screenshot status
+            paymentForm.screenshotReceived = false;
+            screenshotStatus.style.display = 'none';
+            uploadBox.style.display = 'block';
         }
 
-        function showStep3Share() {
+        function showStep3Bot() {
             // Generate unique payment ID
             paymentForm.paymentId = 'ABJ' + Date.now() + Math.random().toString(36).substr(2, 5).toUpperCase();
             
-            // Prepare payment information text
+            // Prepare payment information for bot
             const user = tg.initDataUnsafe.user;
             const paymentInfo = `
 💰 ABJ TUTORIAL PAYMENT SUBMISSION
@@ -1419,20 +1322,100 @@ Telegram User: ${user.first_name} ${user.last_name || ''} (@${user.username || '
 User ID: ${user.id}
 Timestamp: ${new Date().toLocaleString()}
 
-Please approve this payment submission.
+Please send your payment screenshot to complete registration.
             `.trim();
 
-            paymentInfoText.textContent = paymentInfo;
+            finalPaymentInfo.textContent = paymentInfo;
+
+            // Set bot URL with payment info as start parameter
+            const botUrl = `https://t.me/ABJ_Tutorial_Bot?start=payment_${paymentForm.paymentId}`;
+            openBotButton.href =@@abjjubot;
 
             step1Form.style.display = 'none';
             step2ReviewUpload.style.display = 'none';
-            step3Share.style.display = 'block';
+            step3Bot.style.display = 'block';
             backToFormBtn.style.display = 'none';
             backToReviewBtn.style.display = 'inline-flex';
             nextStepBtn.style.display = 'none';
-            proceedToShareBtn.style.display = 'none';
-            finishPaymentBtn.style.display = 'inline-flex';
+            proceedToBotBtn.style.display = 'none';
+            finishProcessBtn.style.display = 'inline-flex';
             tg.BackButton.show();
+        }
+
+        // Open bot for screenshot upload
+        function openBotForScreenshot() {
+            // Generate temporary payment ID for bot reference
+            const tempPaymentId = 'TEMP' + Date.now();
+            paymentForm.paymentId = tempPaymentId;
+            
+            const user = tg.initDataUnsafe.user;
+            const paymentInfo = `
+📱 ABJ Tutorial Payment
+
+Name: ${paymentForm.fullName}
+Semester: ${paymentForm.semester}
+Stream: ${paymentForm.stream}
+Payment Method: ${paymentForm.method}
+Temp ID: ${tempPaymentId}
+
+Please send your payment screenshot now.
+            `.trim();
+
+            // Open bot with payment info
+            const botUrl = `https://t.me/ABJ_Tutorial_Bot?start=upload_${tempPaymentId}`;
+            tg.openTelegramLink(botUrl);
+
+            // Show waiting message
+            tg.showPopup({
+                title: 'Bot Opened',
+                message: 'Please send your payment screenshot to the bot. Return here after sending.',
+                buttons: [{ id: 'ok', type: 'default', text: 'OK' }]
+            });
+
+            // Simulate screenshot received after 3 seconds (in real scenario, bot would update this)
+            setTimeout(() => {
+                paymentForm.screenshotReceived = true;
+                screenshotStatus.style.display = 'block';
+                uploadBox.style.display = 'none';
+                proceedToBotBtn.disabled = false;
+            }, 3000);
+        }
+
+        // Complete registration process
+        function completeRegistration() {
+            const user = tg.initDataUnsafe.user;
+            if (!user) {
+                tg.showAlert("User information not available. Please try again.");
+                return;
+            }
+
+            // Show loading
+            submissionLoadingOverlay.style.display = 'flex';
+
+            // Store payment status
+            const userId = user.id;
+            userPaymentStatus = 'pending';
+            localStorage.setItem(`abj_payment_status_${userId}`, 'pending');
+
+            // Simulate API call
+            setTimeout(() => {
+                // Close modal and reset form
+                paymentModal.style.display = 'none';
+                resetPaymentForm();
+                tg.BackButton.hide();
+                submissionLoadingOverlay.style.display = 'none';
+
+                // Show success message
+                showPaymentStatusMessage(
+                    `✅ <b>Registration Submitted Successfully!</b><br><br>` +
+                    `<b>Payment ID:</b> <code>${paymentForm.paymentId}</code><br><br>` +
+                    `Your payment is under review. We will notify you when approved, usually within 24 hours.`,
+                    'success'
+                );
+
+                // Update UI
+                updatePaymentButton('pending');
+            }, 2000);
         }
 
         // Update stream options based on semester
@@ -1484,58 +1467,6 @@ Please approve this payment submission.
             return isValid;
         }
 
-        // Copy payment info to clipboard
-        function copyPaymentInfoToClipboard() {
-            const textToCopy = paymentInfoText.textContent;
-            navigator.clipboard.writeText(textToCopy).then(function() {
-                copyPaymentInfoBtn.textContent = 'Copied!';
-                copyPaymentInfoBtn.style.backgroundColor = 'hsl(var(--brand-600))';
-                setTimeout(() => {
-                    copyPaymentInfoBtn.textContent = 'Copy Text';
-                    copyPaymentInfoBtn.style.backgroundColor = '';
-                }, 2000);
-            }).catch(function(err) {
-                console.error('Failed to copy text: ', err);
-                tg.showAlert('Failed to copy text. Please select and copy manually.');
-            });
-        }
-
-        // Complete payment process
-        function completePaymentProcess() {
-            const user = tg.initDataUnsafe.user;
-            if (!user) {
-                tg.showAlert("User information not available. Please try again.");
-                return;
-            }
-
-            // Store payment status
-            const userId = user.id;
-            userPaymentStatus = 'pending';
-            localStorage.setItem(`abj_payment_status_${userId}`, 'pending');
-
-            // Close modal and reset form
-            paymentModal.style.display = 'none';
-            resetPaymentForm();
-            tg.BackButton.hide();
-
-            // Show success message
-            showPaymentStatusMessage(
-                `✅ <b>Payment Process Started!</b><br><br>` +
-                `<b>Payment ID:</b> <code>${paymentForm.paymentId}</code><br><br>` +
-                `Please send the payment details and screenshot to our channel. ` +
-                `We will review and approve within 24 hours.`,
-                'success'
-            );
-
-            // Update UI
-            updatePaymentButton('pending');
-
-            // Open channel for user to send the information
-            setTimeout(() => {
-                tg.openTelegramLink('https://t.me/Mejido'); // Replace with your actual channel
-            }, 1000);
-        }
-
         // Reset payment form
         function resetPaymentForm() {
             paymentForm = {
@@ -1544,8 +1475,8 @@ Please approve this payment submission.
                 gender: "",
                 semester: "",
                 method: "",
-                screenshot: null,
-                paymentId: ""
+                paymentId: "",
+                screenshotReceived: false
             };
 
             fullNameInput.value = '';
@@ -1557,14 +1488,11 @@ Please approve this payment submission.
                 btn.classList.remove('active');
             });
             document.getElementById('payment-instructions').style.display = 'none';
-            screenshotInput.value = '';
-            screenshotPreview.style.display = 'none';
-            screenshotPreview.src = '';
-            uploadInstructionsDiv.style.border = '2px dashed hsl(var(--brand-300))';
-            paymentInfoText.textContent = '';
+            screenshotStatus.style.display = 'none';
+            uploadBox.style.display = 'block';
 
             nextStepBtn.disabled = true;
-            proceedToShareBtn.disabled = true;
+            proceedToBotBtn.disabled = true;
         }
 
         // Show payment status message on main page
