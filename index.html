@@ -956,6 +956,16 @@
                         paymentBtn.textContent = "Get Started";
                         paymentBtn.disabled = false;
                         paymentBtn.className = "btn btn-primary";
+                        // When clicked, close mini app and open bot with payment parameter
+                        paymentBtn.onclick = function() {
+                            if (isTelegram) {
+                                // Close mini app and open bot with start parameter
+                                window.Telegram.WebApp.close();
+                                window.Telegram.WebApp.openTelegramLink(`https://t.me/${botUser}?start=payment`);
+                            } else {
+                                window.open(`https://t.me/${botUser}?start=payment`, '_blank');
+                            }
+                        };
                         break;
                     case "pending":
                         paymentBtn.textContent = "Pending approval";
@@ -974,6 +984,14 @@
                         paymentBtn.textContent = "Get Started";
                         paymentBtn.disabled = false;
                         paymentBtn.className = "btn btn-primary";
+                        paymentBtn.onclick = function() {
+                            if (isTelegram) {
+                                window.Telegram.WebApp.close();
+                                window.Telegram.WebApp.openTelegramLink(`https://t.me/${botUser}?start=payment`);
+                            } else {
+                                window.open(`https://t.me/${botUser}?start=payment`, '_blank');
+                            }
+                        };
                         break;
                 }
             }
@@ -1000,22 +1018,6 @@
             if (demoBtn) {
                 demoBtn.addEventListener('click', function() {
                     document.getElementById('samples').scrollIntoView({ behavior: 'smooth' });
-                });
-            }
-
-            // Payment button handler - redirect to bot
-            if (paymentBtn) {
-                paymentBtn.addEventListener('click', function() {
-                    if (payStatus === 'approved') {
-                        window.location.href = '/dashboard';
-                    } else {
-                        // Open bot with start command
-                        if (isTelegram) {
-                            window.Telegram.WebApp.openTelegramLink(`https://t.me/${botUser}?start=payment`);
-                        } else {
-                            window.open(`https://t.me/${botUser}?start=payment`, '_blank');
-                        }
-                    }
                 });
             }
 
