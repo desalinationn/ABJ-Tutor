@@ -339,67 +339,64 @@
             }
         }
 
-        /* Testimonials section */
+        /* Testimonials section - CAROUSEL VERSION */
         .testimonials {
             padding: 3rem 0;
             background-color: white;
-        }
-
-        .marquee-container {
-            overflow: hidden;
             position: relative;
-            width: 100%;
         }
 
-        .marquee-content {
+        .carousel-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+
+        .carousel-track {
             display: flex;
-            animation: marquee 20s linear infinite;
-            white-space: nowrap;
-        }
-
-        .marquee-content.paused {
-            animation-play-state: paused;
-        }
-
-        @keyframes marquee {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
+            transition: transform 0.5s ease-in-out;
         }
 
         .testimonial-item {
-            flex-shrink: 0;
+            flex: 0 0 100%;
             padding: 0 1rem;
-            width: 320px;
+        }
+
+        @media (min-width: 768px) {
+            .testimonial-item {
+                flex: 0 0 50%;
+            }
         }
 
         .testimonial-card {
             background: white;
             border-radius: 1rem;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             border: 1px solid hsl(var(--border));
             height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
         }
 
         .testimonial-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
         .testimonial-header {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .avatar {
-            width: 2.5rem;
-            height: 2.5rem;
+            width: 3rem;
+            height: 3rem;
             border-radius: 50%;
             overflow: hidden;
             background-color: hsl(var(--brand-600));
@@ -407,8 +404,9 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 0.75rem;
+            font-size: 0.875rem;
             font-weight: bold;
+            flex-shrink: 0;
         }
 
         .avatar img {
@@ -418,23 +416,94 @@
         }
 
         .testimonial-name {
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 600;
             color: #1e293b;
         }
 
         .testimonial-stars {
             color: #f59e0b;
-            font-size: 0.75rem;
+            font-size: 0.875rem;
             line-height: 1;
+            margin-top: 0.25rem;
         }
 
         .testimonial-quote {
-            font-size: 0.875rem;
-            line-height: 1.75;
+            font-size: 0.95rem;
+            line-height: 1.7;
             color: #1e293b;
-            white-space: normal;
-            word-break: break-word;
+            flex-grow: 1;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .testimonial-quote:before {
+            content: """;
+            position: absolute;
+            left: 0;
+            top: -0.5rem;
+            font-size: 3rem;
+            color: hsl(var(--brand-100));
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: none;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-btn:hover {
+            background: hsl(var(--brand-50));
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-btn--left {
+            left: 1rem;
+        }
+
+        .carousel-btn--right {
+            right: 1rem;
+        }
+
+        .carousel-btn svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: hsl(var(--brand-600));
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 0.5rem;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: hsl(var(--muted));
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: hsl(var(--brand-600));
+            transform: scale(1.2);
         }
 
         /* Footer */
@@ -595,10 +664,44 @@
             }
         }
 
-        /* More Samples Button */
+        /* More Samples Button - Enhanced */
         .more-samples {
             text-align: center;
-            margin-top: 2rem;
+            margin-top: 3rem;
+        }
+
+        .more-samples .btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, hsl(var(--brand-500)), hsl(var(--brand-700)));
+            color: white;
+            border-radius: 2rem;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .more-samples .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .more-samples .btn:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .more-samples .btn:hover:after {
+            transform: translateX(100%);
         }
     </style>
 </head>
@@ -657,7 +760,6 @@
                                 <button id="payment-btn" class="btn btn-primary">Get Started</button>
                                 <button id="demo-btn" class="btn btn-secondary">Start Demo</button>
                             </div>
-                            <div id="invite-status" style="display: none;"></div>
                         </div>
                     </div>
                 </div>
@@ -731,21 +833,34 @@
                         </div>
                     </div>
                     
-                    <!-- More Samples Button -->
+                    <!-- More Samples Button - Enhanced -->
                     <div class="more-samples">
-                        <a href="https://t.me/ABJSAMPLES" target="_blank" class="btn btn-secondary">More Samples on Telegram</a>
+                        <a href="https://t.me/ABJSAMPLES" target="_blank" class="btn">More Samples on Telegram Channel</a>
                     </div>
                 </div>
             </section>
 
-            <!-- Testimonials Section -->
+            <!-- Testimonials Section - CAROUSEL VERSION -->
             <section class="testimonials">
                 <div class="container">
-                    <h2 class="section-title">Testimonials</h2>
-                    <div class="marquee-container">
-                        <div id="marquee-content" class="marquee-content">
+                    <h2 class="section-title">What Students Say About ABJ Tutorial</h2>
+                    <div class="carousel-container">
+                        <button class="carousel-btn carousel-btn--left">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                            </svg>
+                        </button>
+                        <div class="carousel-track" id="carousel-track">
                             <!-- Testimonials will be populated here by JavaScript -->
                         </div>
+                        <button class="carousel-btn carousel-btn--right">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="carousel-dots" id="carousel-dots">
+                        <!-- Dots will be populated here by JavaScript -->
                     </div>
                 </div>
             </section>
@@ -820,8 +935,8 @@
             // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
             
-            // Render testimonials
-            renderTestimonials();
+            // Initialize carousel
+            initCarousel();
             
             // State variables
             let isTelegram = false;
@@ -836,62 +951,124 @@
             const telegramBotLink = document.getElementById('telegram-bot-link');
             const paymentBtn = document.getElementById('payment-btn');
             const demoBtn = document.getElementById('demo-btn');
-            const inviteStatus = document.getElementById('invite-status');
 
-            // Render testimonials function
-            function renderTestimonials() {
-                const marqueeContent = document.getElementById('marquee-content');
+            // Initialize carousel function - FIXED VERSION
+            function initCarousel() {
+                const carouselTrack = document.getElementById('carousel-track');
+                const carouselDots = document.getElementById('carousel-dots');
                 const logoSrc = "ABJ.jpg";
+                let currentSlide = 0;
+                let slidesPerView = 1;
                 
-                // Create testimonials
-                testimonials.forEach(testimonial => {
-                    const testimonialElement = document.createElement('div');
-                    testimonialElement.className = 'testimonial-item';
-                    testimonialElement.innerHTML = `
-                        <div class="testimonial-card">
-                            <div class="testimonial-header">
-                                <div class="avatar">
-                                    <img src="${logoSrc}" alt="ABJ" onerror="this.parentElement.innerHTML='ABJ'">
-                                </div>
-                                <div>
-                                    <div class="testimonial-name">${testimonial.name}</div>
-                                    <div class="testimonial-stars">★★★★★</div>
-                                </div>
-                            </div>
-                            <p class="testimonial-quote">"${testimonial.quote}"</p>
-                        </div>
-                    `;
-                    marqueeContent.appendChild(testimonialElement);
-                });
+                // Determine slides per view based on screen size
+                function updateSlidesPerView() {
+                    slidesPerView = window.innerWidth >= 768 ? 2 : 1;
+                    renderTestimonials();
+                }
                 
-                // Duplicate testimonials for seamless looping
-                testimonials.forEach(testimonial => {
-                    const testimonialElement = document.createElement('div');
-                    testimonialElement.className = 'testimonial-item';
-                    testimonialElement.innerHTML = `
-                        <div class="testimonial-card">
-                            <div class="testimonial-header">
-                                <div class="avatar">
-                                    <img src="${logoSrc}" alt="ABJ" onerror="this.parentElement.innerHTML='AB'">
+                // Create testimonials - FIXED: No duplication
+                function renderTestimonials() {
+                    carouselTrack.innerHTML = '';
+                    carouselDots.innerHTML = '';
+                    
+                    const totalSlides = Math.ceil(testimonials.length / slidesPerView);
+                    
+                    // Create all slides
+                    for (let i = 0; i < totalSlides; i++) {
+                        const slide = document.createElement('div');
+                        slide.className = 'carousel-track'; // This should be the slide container
+                        slide.style.display = 'flex';
+                        slide.style.flex = `0 0 100%`;
+                        
+                        // Add testimonials to this slide
+                        for (let j = 0; j < slidesPerView; j++) {
+                            const index = i * slidesPerView + j;
+                            if (index >= testimonials.length) break;
+                            
+                            const testimonial = testimonials[index];
+                            const testimonialElement = document.createElement('div');
+                            testimonialElement.className = 'testimonial-item';
+                            testimonialElement.innerHTML = `
+                                <div class="testimonial-card">
+                                    <div class="testimonial-header">
+                                        <div class="avatar">
+                                            <img src="${logoSrc}" alt="ABJ" onerror="this.parentElement.innerHTML='ABJ'">
+                                        </div>
+                                        <div>
+                                            <div class="testimonial-name">${testimonial.name}</div>
+                                            <div class="testimonial-stars">★★★★★</div>
+                                        </div>
+                                    </div>
+                                    <p class="testimonial-quote">${testimonial.quote}</p>
                                 </div>
-                                <div>
-                                    <div class="testimonial-name">${testimonial.name}</div>
-                                    <div class="testimonial-stars">★★★★★</div>
-                                </div>
-                            </div>
-                            <p class="testimonial-quote">"${testimonial.quote}"</p>
-                        </div>
-                    `;
-                    marqueeContent.appendChild(testimonialElement);
-                });
-
-                // Add click event to toggle animation
-                const testimonialCards = document.querySelectorAll('.testimonial-card');
-                testimonialCards.forEach(card => {
-                    card.addEventListener('click', function() {
-                        marqueeContent.classList.toggle('paused');
+                            `;
+                            slide.appendChild(testimonialElement);
+                        }
+                        
+                        carouselTrack.appendChild(slide);
+                        
+                        // Create dot
+                        const dot = document.createElement('div');
+                        dot.className = 'carousel-dot';
+                        if (i === 0) dot.classList.add('active');
+                        dot.addEventListener('click', () => goToSlide(i));
+                        carouselDots.appendChild(dot);
+                    }
+                    
+                    updateCarousel();
+                }
+                
+                // Update carousel position
+                function updateCarousel() {
+                    const totalSlides = Math.ceil(testimonials.length / slidesPerView);
+                    carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+                    
+                    // Update dots
+                    const dots = document.querySelectorAll('.carousel-dot');
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentSlide);
                     });
+                }
+                
+                // Navigate to specific slide
+                function goToSlide(slideIndex) {
+                    const totalSlides = Math.ceil(testimonials.length / slidesPerView);
+                    currentSlide = (slideIndex + totalSlides) % totalSlides;
+                    updateCarousel();
+                }
+                
+                // Next slide
+                function nextSlide() {
+                    const totalSlides = Math.ceil(testimonials.length / slidesPerView);
+                    currentSlide = (currentSlide + 1) % totalSlides;
+                    updateCarousel();
+                }
+                
+                // Previous slide
+                function prevSlide() {
+                    const totalSlides = Math.ceil(testimonials.length / slidesPerView);
+                    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                    updateCarousel();
+                }
+                
+                // Event listeners for buttons
+                document.querySelector('.carousel-btn--left').addEventListener('click', prevSlide);
+                document.querySelector('.carousel-btn--right').addEventListener('click', nextSlide);
+                
+                // Auto slide every 5 seconds
+                let slideInterval = setInterval(nextSlide, 5000);
+                
+                // Pause auto slide on hover
+                carouselTrack.addEventListener('mouseenter', () => clearInterval(slideInterval));
+                carouselTrack.addEventListener('mouseleave', () => {
+                    slideInterval = setInterval(nextSlide, 5000);
                 });
+                
+                // Handle window resize
+                window.addEventListener('resize', updateSlidesPerView);
+                
+                // Initialize
+                updateSlidesPerView();
             }
 
             // Check if we're in Telegram
@@ -993,9 +1170,6 @@
                 
                 // Check payment status
                 checkPaymentStatus();
-                
-                // Check for invite status
-                checkInviteStatus();
             }
 
             // Check payment status
@@ -1060,24 +1234,6 @@
                             }
                         };
                         break;
-                }
-            }
-
-            // Check invite status
-            function checkInviteStatus() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const inviteFromUrl = urlParams.get('invite');
-                const startParam = urlParams.get('start');
-                
-                if ((inviteFromUrl || startParam) && (inviteFromUrl !== userId || startParam !== userId)) {
-                    const inviterId = inviteFromUrl || startParam;
-                    const inviterName = `user ${inviterId}`;
-                    inviteStatus.innerHTML = `
-                        <div style="margin-top: 1rem; padding: 0.75rem; background-color: hsl(var(--brand-50)); border-radius: 0.5rem; font-size: 0.875rem;">
-                            🎉 You were invited by ${inviterName}! Both you and your friend will get special benefits.
-                        </div>
-                    `;
-                    inviteStatus.style.display = 'block';
                 }
             }
 
