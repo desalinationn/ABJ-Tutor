@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/jpeg" href="/photo_2024-05-08_10-48-29.jpg">
+    <link rel="icon" type="image/jpg" href="ABJ.jpg">
     <style>
         /* CSS Variables for colors */
         :root {
@@ -277,6 +277,7 @@
             background-color: white;
             padding: 0;
             overflow: hidden;
+            border: 1px solid hsl(var(--border));
         }
 
         .sample-title {
@@ -284,6 +285,7 @@
             font-size: 1.25rem;
             margin-bottom: 1rem;
             padding: 0 1.5rem;
+            padding-top: 1.5rem;
         }
 
         .video-container {
@@ -291,6 +293,7 @@
             border-radius: 0.5rem;
             overflow: hidden;
             background-color: rgba(0, 0, 0, 0.8);
+            margin: 0 1.5rem;
         }
 
         .video-container iframe {
@@ -304,6 +307,38 @@
             color: hsl(var(--muted-foreground));
         }
 
+        /* PDF Cards */
+        .pdf-card {
+            border-radius: 1rem;
+            background-color: white;
+            padding: 1.5rem;
+            border: 1px solid hsl(var(--border));
+        }
+
+        .pdf-card h3 {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .pdf-card p {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 1rem;
+        }
+
+        .pdf-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .pdf-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         /* Testimonials section */
         .testimonials {
             padding: 3rem 0;
@@ -313,11 +348,12 @@
         .marquee-container {
             overflow: hidden;
             position: relative;
+            width: 100%;
         }
 
         .marquee-content {
             display: flex;
-            animation: marquee 30s linear infinite;
+            animation: marquee 20s linear infinite;
             white-space: nowrap;
         }
 
@@ -346,6 +382,8 @@
             padding: 1.5rem;
             cursor: pointer;
             transition: transform 0.3s ease;
+            border: 1px solid hsl(var(--border));
+            height: 100%;
         }
 
         .testimonial-card:hover {
@@ -556,6 +594,12 @@
                 align-items: center;
             }
         }
+
+        /* More Samples Button */
+        .more-samples {
+            text-align: center;
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
@@ -563,7 +607,7 @@
         <!-- Telegram verification overlay -->
         <div id="verification-overlay" class="loading-overlay" style="display: none;">
             <div class="loading-content">
-                <img src="/photo_2024-05-08_10-48-29.jpg" alt="ABJ" class="loading-logo">
+                <img src="/image.png" alt="ABJ" class="loading-logo">
                 <div class="loading-title">Opening ABJ Tutorial…</div>
                 <div class="loading-subtitle">Please wait while we connect your Telegram account</div>
                 <div class="loading-spinner"></div>
@@ -667,6 +711,29 @@
                             </div>
                             <p class="sample-desc">Biology for freshman students chapter 2</p>
                         </div>
+                    </div>
+                    
+                    <!-- PDF Samples Section -->
+                    <div class="pdf-grid">
+                        <div class="pdf-card">
+                            <h3>GENERAL BIOLOGY MID TERM EXAM PREPARED BY ABJ</h3>
+                            <p>Open exam PDF</p>
+                            <div>
+                                <a href="GENERAL BIOLOGY MID TERM EXM PREPARED BY ABJ.pdf" target="_blank" rel="noreferrer" class="btn btn-primary">Click Here</a>
+                            </div>
+                        </div>
+                        <div class="pdf-card">
+                            <h3>LOGIC EXAM QUESTION</h3>
+                            <p>Open exam PDF</p>
+                            <div>
+                                <a href="Logic Exam question ABJ Tube.pdf" target="_blank" rel="noreferrer" class="btn btn-primary">Click Here</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- More Samples Button -->
+                    <div class="more-samples">
+                        <a href="https://t.me/ABJSAMPLES" target="_blank" class="btn btn-secondary">More Samples on Telegram</a>
                     </div>
                 </div>
             </section>
@@ -774,7 +841,7 @@
             // Render testimonials function
             function renderTestimonials() {
                 const marqueeContent = document.getElementById('marquee-content');
-                const logoSrc = "/photo_2024-05-08_10-48-29.jpg";
+                const logoSrc = "/image.png";
                 
                 // Create testimonials
                 testimonials.forEach(testimonial => {
